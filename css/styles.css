@@ -1,0 +1,106 @@
+body {
+  background-color: #EECBB2;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.status-on {
+  background-color: #92BA79;
+  border: 2px solid #729B58;
+}
+
+.status-off {
+  background-color: #E95C50;
+  border: 2px solid #D83B2E;
+}
+
+.status-unknown {
+  background-color: #FECE85;
+  border: 2px solid #FFB646;
+}
+
+.station-container {
+  position: relative;
+  padding: 20px 0;
+}
+
+.station-marker {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #FF9966;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.station-connector {
+  position: absolute;
+  left: 19px;
+  top: 50px;
+  width: 2px;
+  height: calc(100% - 40px);
+  border-left: 2px dashed #ccc;
+  z-index: 1;
+}
+
+.bus-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #92BA79;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin: 10px 0;
+  position: relative;
+}
+
+.bus-number {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #666;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journey-info {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.journey-time {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.service-times {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+}
+
+.last-bus-times {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 10px;
+}

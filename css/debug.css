@@ -1,0 +1,42 @@
+/* Debug */
+canvas,
+div,
+dl,
+label {
+  outline: 1px dashed #7fff00;
+}
+svg {
+  outline: 1px dashed #00f;
+}
+dd,
+dt,
+li {
+  outline: 1px dashed #ff0;
+}
+img {
+  outline: 1px dashed orange;
+}
+input {
+  outline: 1px dotted red;
+}
+table {
+  outline: 1px dashed pink;
+}
+td,
+th {
+  outline: 1px dashed red;
+}
+a {
+  outline: 1px dashed red;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  outline: 1px dashed red;
+}
+span {
+  outline: 1px dashed red;
+}

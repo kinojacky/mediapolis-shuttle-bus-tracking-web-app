@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shuttle Bus Tracker</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/styles.css">
+  
+</head>
+
+<body>
+  <div class="container py-4">
+    <div class="bg-white mb-4 p-3">
+      <div class="status-indicator status-on"></div>
+      <span class="fw-bold">ON SERVICE</span>
+    </div>
+
+    <div class="text-center mb-4">
+      <h2 class="mb-2">Good Evening, Off-Duty Hero!</h2>
+      <p class="mb-2">Don't be blue, is Monday</p>
+      <p class="text-muted look-where">Look where I am now...</p>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <div class="station-container">
+          <div class="station-marker">
+            <i class="bi bi-arrow-up"></i>
+          </div>
+          <div class="station-connector"></div>
+          <div class="ms-5">
+            Buona Vista MRT
+            <div class="bus-icon">
+              <i class="bi bi-bus-front"></i>
+              <div class="bus-number">1</div>
+            </div>
+            <div class="bus-icon">
+              <i class="bi bi-bus-front"></i>
+              <div class="bus-number">2</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="station-container">
+          <div class="station-marker">
+            <i class="bi bi-square"></i>
+          </div>
+          <div class="station-connector"></div>
+          <div class="ms-5">one-north MRT</div>
+        </div>
+
+        <div class="station-container">
+          <div class="station-marker">
+            <i class="bi bi-square"></i>
+          </div>
+          <div class="ms-5">Mediacorp Campus</div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="journey-info">
+          <h3>Journey</h3>
+          <div class="journey-time">10 <span class="fs-5">mins</span></div>
+
+          <h3 class="mt-4">Service Time</h3>
+          <div class="service-times">
+            <div>Bus 1:</div>
+            <div>Bus 2:</div>
+            <div>5:00 PM to 7:30 PM</div>
+            <div>5:10 PM to 7:20 PM</div>
+          </div>
+
+          <h3 class="mt-4">Last Bus</h3>
+          <div class="last-bus-times">
+            <div class="text-danger">7:20 PM</div>
+            <div class="text-danger">7:10 PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="js/routes.js"></script>
+  
+  <script>
+    const greetingsConfig = {
+      greetings: {
+        MORNING: "Good Morning, Mate!",
+        LUNCH: "Good Afternoon, Eater!",
+        EVENING: "Good Evening, Off-Duty Hero!",
+        WEEKEND: "Sorry! Off Service today!"
+      },
+      dailyMessages: {
+        Monday: [
+          "Monday? Let's make it a fun day!",
+          "New week, new goals. Let's go!",
+          "Monday blues? Nah, we got this!",
+          "Wake up. Kick ass. Repeat. It's Monday!",
+          "Hello, Monday. Be gentle, please."
+        ],
+        Tuesday: [
+          "Keep the momentum, it's Tuesday!",
+          "Tuesday: One step closer to Friday!",
+          "You survived Monday. You got this!",
+          "Tuesdays are for making progress!",
+          "Stay strong, Tuesday won't last forever!"
+        ],
+        Wednesday: [
+          "Halfway there! Happy Wednesday!",
+          "It's Wednesday, keep pushing!",
+          "The weekend is in sight!",
+          "Work hard, Wednesday harder!",
+          "Wednesdays are for warriors!"
+        ],
+        Thursday: [
+          "Thursday vibes: Almost there!",
+          "Push through, the weekend is calling!",
+          "One more day to go, stay strong!",
+          "Thirsty for Friday? Hold on!",
+          "Thursday: The weekend's warm-up!"
+        ],
+        Friday: [
+          "Finally Friday! Let's rock!",
+          "It's Fri-YAY! Let the fun begin!",
+          "Work hard, party harder. Happy Friday!",
+          "Weekend mode: ON!",
+          "Cheers to the weekend!"
+        ]
+      }
+    };
+
+    const serviceConfig = {
+      manualOverride: {
+        enabled: false,
+        status: "SERVICE_UNKNOWN"
+      },
+      operatingHours: [
+        {
+          days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          periods: [
+            { start: "07:30", end: "10:00" },
+            { start: "11:30", end: "14:00" },
+            { start: "17:00", end: "19:30" }
+          ]
+        }
+      ]
+    };
+
+    function updateGreeting() {
+      const now = new Date();
+      const hour = now.getHours();
+      const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+
+      let periodGreeting;
+      if (currentDay === "Saturday" || currentDay === "Sunday") {
+        periodGreeting = greetingsConfig.greetings.WEEKEND;
+      } else if (hour >= 5 && hour < 12) {
+        periodGreeting = greetingsConfig.greetings.MORNING;
+      } else if (hour >= 12 && hour < 17) {
+        periodGreeting = greetingsConfig.greetings.LUNCH;
+      } else {
+        periodGreeting = greetingsConfig.greetings.EVENING;
+      }
+
+      const dailyMessages = greetingsConfig.dailyMessages[currentDay];
+      const randomMessage = dailyMessages ? dailyMessages[Math.floor(Math.random() * dailyMessages.length)] : "";
+
+      const greetingElement = document.querySelector('h2');
+      const messageElement = document.querySelector('h2 + p');
+      const lookWhereElement = document.querySelector('.look-where');
+
+      if (greetingElement) {
+        greetingElement.textContent = periodGreeting;
+      } else {
+        console.error('Greeting element not found');
+      }
+
+      if (messageElement && lookWhereElement) {
+        if (currentDay === "Saturday" || currentDay === "Sunday") {
+          messageElement.style.display = 'none';
+          lookWhereElement.style.display = 'none';
+        } else {
+          messageElement.style.display = 'block';
+          lookWhereElement.style.display = 'block';
+          messageElement.textContent = randomMessage;
+        }
+      } else {
+        console.error('Message or look-where element not found');
+      }
+    }
+
+    function updateServiceStatus() {
+      const now = new Date();
+      const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+      const currentTime = now.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      });
+
+      if (serviceConfig.manualOverride.enabled) {
+        setStatus(serviceConfig.manualOverride.status);
+        return;
+      }
+
+      const isOperatingDay = serviceConfig.operatingHours[0].days.includes(currentDay);
+      if (!isOperatingDay) {
+        setStatus("OFF_SERVICE");
+        return;
+      }
+
+      const isServiceTime = serviceConfig.operatingHours[0].periods.some(period => {
+        return currentTime >= period.start && currentTime <= period.end;
+      });
+
+      setStatus(isServiceTime ? "ON_SERVICE" : "OFF_SERVICE");
+    }
+
+    function setStatus(status) {
+      const statusIndicator = document.querySelector('.status-indicator');
+      const statusText = document.querySelector('.status-indicator + span');
+
+      if (statusIndicator && statusText) {
+        statusIndicator.className = 'status-indicator';
+        switch (status) {
+          case "ON_SERVICE":
+            statusIndicator.classList.add('status-on');
+            statusText.textContent = "ON SERVICE";
+            break;
+          case "OFF_SERVICE":
+            statusIndicator.classList.add('status-off');
+            statusText.textContent = "OFF SERVICE";
+            break;
+          case "SERVICE_UNKNOWN":
+            statusIndicator.classList.add('status-unknown');
+            statusText.textContent = "SERVICE UNKNOWN";
+            break;
+        }
+      } else {
+        console.error('Status elements not found');
+      }
+    }
+
+    // Initialize
+    updateServiceStatus();
+    updateGreeting();
+
+    // Update status every minute
+    setInterval(updateServiceStatus, 60000);
+    setInterval(updateGreeting, 60000);
+
+    // For testing manual override
+    window.toggleManualOverride = function (enabled, status) {
+      serviceConfig.manualOverride.enabled = enabled;
+      if (status) serviceConfig.manualOverride.status = status;
+      updateServiceStatus();
+    }
+  </script>
+
+  <!-- Time Simulator -->
+  <!-- <script src="js/timeSimulator.js"></script> -->
+</body>
+
+</html>
