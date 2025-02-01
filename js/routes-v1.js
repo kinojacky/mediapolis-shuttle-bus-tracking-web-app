@@ -86,46 +86,6 @@ class RouteScheduleHandler {
     this.currentRoute = null;
     this.busLocations = [];
     this.lastUpdate = null;
-    this.initializeInterface();
-  }
-
-  initializeInterface() {
-    // 找到主要容器
-    const mainContainer = document.querySelector(".container");
-    if (!mainContainer) return;
-
-    // 清空現有內容
-    const existingContent = mainContainer.querySelector(".row");
-    if (existingContent) {
-      existingContent.remove();
-    }
-
-    // 建立新的基本結構
-    const routeDisplay = document.createElement("div");
-    routeDisplay.className = "row";
-    routeDisplay.innerHTML = `
-      <div class="col-6">
-        <!-- 左側：站點和巴士位置顯示 -->
-        <div class="stops-container"></div>
-      </div>
-      <div class="col-6">
-        <!-- 右側：路線資訊和時刻表 -->
-        <div class="journey-info bg-white p-3 rounded shadow-sm mb-4">
-          <h3>Journey</h3>
-          <div class="journey-time">-- <span class="fs-5">mins</span></div>
-
-          <h3 class="mt-4">Service Time</h3>
-          <div class="service-times"></div>
-
-          <h3 class="mt-4">Last Bus</h3>
-          <div class="last-bus-times"></div>
-        </div>
-        <div class="schedule-container"></div>
-      </div>
-    `;
-
-    // 插入到主容器中
-    mainContainer.appendChild(routeDisplay);
   }
 
   getCurrentRoute() {
@@ -136,7 +96,6 @@ class RouteScheduleHandler {
     const currentTime = `${hour.toString().padStart(2, "0")}:${minute
       .toString()
       .padStart(2, "0")}`;
-    console.log(`Current time: ${now.toLocaleString()} (Day: ${day})`); // 為了除錯
 
     // Weekend check
     if (day === 0 || day === 6) {
@@ -209,7 +168,7 @@ class RouteScheduleHandler {
 
     const route = routeConfig[this.currentRoute];
     let html = `
-      <div class="schedule-table">
+      <div class="schedule-container bg-white p-3 rounded shadow-sm">
         <h4>${route.name}</h4>
         <div class="table-responsive">
           <table class="table table-sm">
@@ -241,13 +200,57 @@ class RouteScheduleHandler {
     return html;
   }
 
-  updateStopsDisplay() {
-    if (!this.currentRoute) {
-      document.querySelector(".stops-container").innerHTML = "";
-      return;
+  updateInterface() {
+    this.getCurrentRoute();
+    this.updateBusLocations();
+
+    // Update journey time and service info
+    if (this.currentRoute) {
+      const route = routeConfig[this.currentRoute];
+      document.querySelector(
+        ".journey-time"
+      ).innerHTML = `${route.journeyTime} <span class="fs-5">mins</span>`;
+
+      // Update service times
+      const serviceTimesContainer = document.querySelector(".service-times");
+      if (route.buses === 1) {
+        serviceTimesContainer.innerHTML = `
+          <div>Service Hours: ${route.operatingHours}</div>
+        `;
+      } else {
+        serviceTimesContainer.innerHTML = `
+          <div>Bus 1: ${route.operatingHours}</div>
+          <div>Bus 2: ${route.operatingHours}</div>
+        `;
+      }
+
+      // Update last bus times
+      const lastBusContainer = document.querySelector(".last-bus-times");
+      if (route.buses === 1) {
+        lastBusContainer.innerHTML = `
+          <div class="text-danger">${route.lastBus}</div>
+        `;
+      } else {
+        lastBusContainer.innerHTML = `
+          <div class="text-danger">${route.lastBus.bus1}</div>
+          <div class="text-danger">${route.lastBus.bus2}</div>
+        `;
+      }
+
+      // Update stops and bus locations
+      this.updateStopsDisplay();
     }
 
+    // Update schedule display
+    const scheduleContainer = document.querySelector(".col-6:last-child");
+    scheduleContainer.innerHTML = this.generateScheduleHTML();
+  }
+
+  updateStopsDisplay() {
+    if (!this.currentRoute) return;
+
     const route = routeConfig[this.currentRoute];
+    const stopsContainer = document.querySelector(".col-6:first-child");
     let html = "";
 
     route.stops.forEach((stop, index) => {
@@ -286,55 +289,7 @@ class RouteScheduleHandler {
       `;
     });
 
-    document.querySelector(".stops-container").innerHTML = html;
-  }
-
-  updateInterface() {
-    this.getCurrentRoute();
-    this.updateBusLocations();
-
-    // 更新路線資訊顯示
-    if (this.currentRoute) {
-      const route = routeConfig[this.currentRoute];
-
-      // 更新行車時間
-      document.querySelector(
-        ".journey-time"
-      ).innerHTML = `${route.journeyTime} <span class="fs-5">mins</span>`;
-
-      // 更新服務時間
-      const serviceTimesHTML =
-        route.buses === 1
-          ? `<div>Service Hours: ${route.operatingHours}</div>`
-          : `<div>Bus 1: ${route.operatingHours}</div>
-           <div>Bus 2: ${route.operatingHours}</div>`;
-      document.querySelector(".service-times").innerHTML = serviceTimesHTML;
-
-      // 更新末班車時間
-      const lastBusHTML =
-        route.buses === 1
-          ? `<div class="text-danger">${route.lastBus}</div>`
-          : `<div class="text-danger">${route.lastBus.bus1}</div>
-           <div class="text-danger">${route.lastBus.bus2}</div>`;
-      document.querySelector(".last-bus-times").innerHTML = lastBusHTML;
-
-      // 更新站點和巴士位置
-      this.updateStopsDisplay();
-
-      // 更新時刻表
-      document.querySelector(".schedule-container").innerHTML =
-        this.generateScheduleHTML();
-    } else {
-      // 如果沒有服務，顯示預設內容
-      document.querySelector(".journey-time").innerHTML =
-        '-- <span class="fs-5">mins</span>';
-      document.querySelector(".service-times").innerHTML =
-        "<div>No service available</div>";
-      document.querySelector(".last-bus-times").innerHTML = "<div>--</div>";
-      document.querySelector(".stops-container").innerHTML = "";
-      document.querySelector(".schedule-container").innerHTML =
-        this.generateScheduleHTML();
-    }
+    stopsContainer.innerHTML = html;
   }
 
   start() {
