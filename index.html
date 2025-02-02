@@ -48,8 +48,8 @@
           </div>
 
           <div class="text-center">
-            <h4 class="mb-2">Good Evening, Off-Duty Hero!</h4>
-            <h4 class="mb-2">Don't be blue, is Monday</h4>
+            <h4 class="greeting mb-2">Good Evening, Off-Duty Hero!</h4>
+            <h4 class="message mb-2">Don't be blue, is Monday</h4>
             <h5 class="look-where mb-0">Look where I am now...</h5>
           </div>
         </div>
@@ -71,10 +71,12 @@
             <div class="bus-icon">
               <i class="bi bi-bus-front-fill"></i>
               <div class="bus-number">1</div>
+              <i class="bi bi-chevron-double-down animated-hover"></i>
             </div>
             <div class="bus-icon">
               <i class="bi bi-bus-front-fill"></i>
               <div class="bus-number">2</div>
+              <i class="bi bi-chevron-double-down animated-hover"></i>
             </div>
           </div>
         </div>
@@ -98,21 +100,13 @@
       <div class="col-6">
         <div class="journey-info">
           <h3>Journey</h3>
-          <div class="journey-time">10 <span class="fs-5">mins</span></div>
+          <div class="journey-time"><span class="fs-5">mins</span></div>
 
           <h3 class="mt-4">Service Time</h3>
-          <div class="service-times">
-            <div>Bus 1:</div>
-            <div>Bus 2:</div>
-            <div>5:00 PM to 7:30 PM</div>
-            <div>5:10 PM to 7:20 PM</div>
-          </div>
+          <div class="service-times"></div>
 
           <h3 class="mt-4">Last Bus</h3>
-          <div class="last-bus-times">
-            <div class="text-danger">7:20 PM</div>
-            <div class="text-danger">7:10 PM</div>
-          </div>
+          <div class="last-bus-times"></div>
         </div>
       </div>
     </div>
@@ -205,8 +199,8 @@
       const dailyMessages = greetingsConfig.dailyMessages[currentDay];
       const randomMessage = dailyMessages ? dailyMessages[Math.floor(Math.random() * dailyMessages.length)] : "";
 
-      const greetingElement = document.querySelector('h2');
-      const messageElement = document.querySelector('h2 + p');
+      const greetingElement = document.querySelector('.greeting');
+      const messageElement = document.querySelector('.message');
       const lookWhereElement = document.querySelector('.look-where');
 
       if (greetingElement) {

@@ -108,9 +108,9 @@ class RouteScheduleHandler {
         <!-- 左側：站點和巴士位置顯示 -->
         <div class="stops-container"></div>
       </div>
-      <div class="col-6">
+      <div class="col-6 timetable-divider">
         <!-- 右側：路線資訊和時刻表 -->
-        <div class="journey-info bg-white p-3 rounded shadow-sm mb-4">
+        <div class="journey-info py-3 mb-4">
           <h3>Journey</h3>
           <div class="journey-time">-- <span class="fs-5">mins</span></div>
 
@@ -120,6 +120,8 @@ class RouteScheduleHandler {
           <h3 class="mt-4">Last Bus</h3>
           <div class="last-bus-times"></div>
         </div>
+      </div>
+      <div class="col-12 pt-4">
         <div class="schedule-container"></div>
       </div>
     `;
@@ -204,7 +206,7 @@ class RouteScheduleHandler {
 
   generateScheduleHTML() {
     if (!this.currentRoute) {
-      return '<div class="text-center"><p>No service available</p></div>';
+      return '<div class="text-center"><p class="py-3">No service available</p></div>';
     }
 
     const route = routeConfig[this.currentRoute];
@@ -212,7 +214,7 @@ class RouteScheduleHandler {
       <div class="schedule-table">
         <h4>${route.name}</h4>
         <div class="table-responsive">
-          <table class="table table-sm">
+          <table class="table table-striped table-bordered table-sm">
             <thead>
               <tr>
                 ${route.buses > 1 ? "<th>Bus</th>" : ""}
@@ -225,7 +227,7 @@ class RouteScheduleHandler {
     route.schedule.forEach((schedule) => {
       html += `
         <tr>
-          ${route.buses > 1 ? `<td>${schedule.bus || 1}</td>` : ""}
+          ${route.buses > 1 ? `<td class="text-center">${schedule.bus || 1}</td>` : ""}
           ${schedule.times.map((time) => `<td>${time}</td>`).join("")}
         </tr>
       `;
@@ -258,12 +260,8 @@ class RouteScheduleHandler {
       html += `
         <div class="station-container">
           <div class="d-flex align-items-center">
-            <div class="station-marker me-2">
-              <i class="bi ${
-                index === 0 ? "bi-triangle-fill rotate180" : "bi-square-fill"
-              }"></i>
-            </div>
-            ${stop}
+            <div class="station-marker me-2"></div>
+            <div>${stop}</div>
           </div>
           ${
             index < route.stops.length - 1
@@ -310,7 +308,7 @@ class RouteScheduleHandler {
       // 更新服務時間
       const serviceTimesHTML =
         route.buses === 1
-          ? `<div>Service Hours: ${route.operatingHours}</div>`
+          ? `<div>${route.operatingHours}</div>`
           : `<div>Bus 1: ${route.operatingHours}</div>
            <div>Bus 2: ${route.operatingHours}</div>`;
       document.querySelector(".service-times").innerHTML = serviceTimesHTML;
@@ -318,9 +316,9 @@ class RouteScheduleHandler {
       // 更新末班車時間
       const lastBusHTML =
         route.buses === 1
-          ? `<div class="text-danger">${route.lastBus}</div>`
-          : `<div class="text-danger">${route.lastBus.bus1}</div>
-           <div class="text-danger">${route.lastBus.bus2}</div>`;
+          ? `<div class="text-red">${route.lastBus}</div>`
+          : `<div class="text-red">${route.lastBus.bus1}</div>
+           <div class="text-red">${route.lastBus.bus2}</div>`;
       document.querySelector(".last-bus-times").innerHTML = lastBusHTML;
 
       // 更新站點和巴士位置
