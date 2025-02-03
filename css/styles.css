@@ -69,6 +69,15 @@ header {
   background-color: #EECBB3;
 }
 
+.title-panel.attention {
+  background-color: #FECE85;
+}
+
+.title-panel .bi {
+  font-size: 2rem;
+  margin-right: 0.5rem;
+}
+
 .status-panel {
   width: 100%;
   display: inline-flex;
