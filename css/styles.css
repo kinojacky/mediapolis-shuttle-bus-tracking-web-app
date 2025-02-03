@@ -211,3 +211,26 @@ header {
   grid-template-columns: auto auto;
   gap: 10px;
 }
+
+.bg-footer {
+  height: 24rem;
+  background-image: url('../imgs/bg_footer_m.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.img-bee {
+  width: 22rem;
+}
+
+@media (min-width: 576px) {
+  .bg-footer {
+    height: 20rem;
+    background-image: url('../imgs/bg_footer_d.png');
+  }
+
+  .img-bee {
+    width: 26rem;
+  }
+}
