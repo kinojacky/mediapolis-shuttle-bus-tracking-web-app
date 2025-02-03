@@ -41,6 +41,7 @@ button.navbar-toggler i.bi {
 
 .rotate180 {
   transform: rotate(180deg);
+  margin-top: 0.2rem;
 }
 
 .navbar {
@@ -204,6 +205,10 @@ header {
   border-left: 3px solid #CCCCCC;
 }
 
+.horizontal-divider {
+  border-bottom: 3px solid #CCCCCC;
+}
+
 .journey-time {
   font-size: 2.5rem;
   font-weight: bold;
@@ -219,6 +224,10 @@ header {
   display: grid;
   grid-template-columns: auto auto;
   gap: 10px;
+}
+
+.require-attention {
+  color: #E95C50;
 }
 
 .bg-footer {

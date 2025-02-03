@@ -38,6 +38,7 @@
     </div>
   </nav>
 
+  <!-- 行車狀態顯示條 與 動態問候訊息 -->
   <header>
     <div class="container py-4">
       <div class="row">
@@ -57,66 +58,84 @@
     </div>
   </header>
 
-  <div class="container main-timetable py-4">
-    <div class="row">
-      <div class="col-6">
-        <div class="station-container">
-          <div class="d-flex align-items-center">
-            <div class="station-marker me-2">
-              <i class="bi bi-triangle-fill rotate180"></i>
-            </div>
-          </div>
-          <div class="station-connector"></div>
-          <div class="ms-5">
-            <div class="bus-icon">
-              <i class="bi bi-bus-front-fill"></i>
-              <div class="bus-number">1</div>
-              <i class="bi bi-chevron-double-down animated-hover"></i>
-            </div>
-            <div class="bus-icon">
-              <i class="bi bi-bus-front-fill"></i>
-              <div class="bus-number">2</div>
-              <i class="bi bi-chevron-double-down animated-hover"></i>
-            </div>
-          </div>
-        </div>
+  <!-- 主要動態時間表 -->
+  <div class="container main-timetable py-4"></div>
 
-        <div class="station-container">
-          <div class="station-marker">
-            <i class="bi bi-square-fill"></i>
-          </div>
-          <div class="station-connector"></div>
-          <div class="ms-5"></div>
-        </div>
-
-        <div class="station-container">
-          <div class="station-marker">
-            <i class="bi bi-square"></i>
-          </div>
-          <div class="ms-5"></div>
+  <!-- 注意事項 -->
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-12 text-center">
+        <div class="title-panel attention mb-2">
+          <i class="bi bi-exclamation-triangle"></i>
+          <span class="fw-bold"> ATTENTION</span>
         </div>
       </div>
-
-      <div class="col-6">
-        <div class="journey-info">
-          <h3>Journey</h3>
-          <div class="journey-time"><span class="fs-5">mins</span></div>
-
-          <h3 class="mt-4">Service Time</h3>
-          <div class="service-times"></div>
-
-          <h3 class="mt-4">Last Bus</h3>
-          <div class="last-bus-times"></div>
+      <div class="col-11">
+        <div class="row justify-content-center align-items-center">
+          <div class="col-4 col-md-2">
+            <img src="imgs/img_free_ride.png" alt="No Ticket Needed" class="img-fluid">
+          </div>
+          <div class="col-8 col-md-4">
+            <p class="mb-0 fw-bold">BUS SERVICE IS FREE TO ALL CAMPUS EMPLOYEES</p>
+          </div>
+    
+          <div class="w-100"></div>
+    
+          <div class="col-4 col-md-2">
+            <img src="imgs/img_signboard.png" alt="Look for Signboard" class="img-fluid">
+          </div>
+          <div class="col-8 col-md-4">
+            <p class="mb-0 fw-bold">LOOK OUT FOR CAMPUS LOGO
+              DISPLAYED ON BUS</p>
+          </div>
+    
+          <div class="w-100"></div>
+    
+          <div class="col-4 col-md-2">
+            <img src="imgs/img_badge.png" alt="ID Badge Required" class="img-fluid">
+          </div>
+          <div class="col-8 col-md-4">
+            <p class="mb-0 fw-bold">KINDLY DISPLAY STAFF PASS
+              BEFORE BOARDING</p>
+          </div>
+    
+          <div class="w-100"></div>
+    
+          <div class="col-4 col-md-2">
+            <img src="imgs/img_no_guest_allow.png" alt="Staff Only" class="img-fluid">
+          </div>
+          <div class="col-8 col-md-4">
+            <p class="mb-0 fw-bold">NO GUEST ALLOW<br>
+              <span class="require-attention">*</span>CAMPUS STAFF ONLY
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-12 text-center">
-      <div class="title-panel attention mb-4">
-        <i class="bi bi-exclamation-triangle"></i>
-        <span class="fw-bold"> ATTENTION</span>
+    
+      <!-- 這是分割線 -->
+      <div class="w-75 horizontal-divider pt-4 mb-4"></div>
+    
+      <div class="col-10">
+        <div class="row justify-content-center">
+          <div class="col-4 col-md-2 pb-4">
+            <img src="imgs/img_no_pet.png" alt="No Pet" class="img-fluid">
+          </div>
+          <div class="col-4 col-md-2 pb-4">
+            <img src="imgs/img_no_guest.png" alt="No Guest" class="img-fluid">
+          </div>
+          <div class="col-4 col-md-2 pb-4">
+            <img src="imgs/img_no_standing.png" alt="No Staning" class="img-fluid">
+          </div>
+          <div class="col-4 col-md-2 pb-4">
+            <img src="imgs/img_no_smoking.png" alt="No Smoking" class="img-fluid">
+          </div>
+          <div class="col-4 col-md-2 pb-4">
+            <img src="imgs/img_no_food.png" alt="No Food" class="img-fluid">
+          </div>
+          <div class="col-4 col-md-2 pb-4">
+            <img src="imgs/img_no_durian.png" alt="No Durian" class="img-fluid">
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -301,9 +320,9 @@
     updateGreeting();
 
     // 更新間隔改為每秒
-    setInterval(updateServiceStatus, 60000);
-    setInterval(updateGreeting, 60000);
-    setInterval(() => routeHandler.updateInterface(), 30000);
+    setInterval(updateServiceStatus, 60000); // 1分鐘
+    setInterval(updateGreeting, 60000); // 1分鐘
+    setInterval(() => routeHandler.updateInterface(), 5000); // 5秒
 
     // For testing manual override
     window.toggleManualOverride = function (enabled, status) {

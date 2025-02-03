@@ -308,7 +308,7 @@ class RouteScheduleHandler {
                     ? `<div class="bus-number">${bus.busId}</div>`
                     : ""
                 }
-                <i class="bi bi-chevron-double-down animated-hover"></i>
+                <!-- <i class="bi bi-chevron-double-down animated-hover"></i> --->
               </div>
             `
               )
@@ -338,7 +338,7 @@ class RouteScheduleHandler {
       const serviceTimesHTML =
         route.buses === 1
           ? `<div>Service Hours: ${route.operatingHours}</div>`
-          : `<div>Bus 1: ${route.operatingHours}</div>
+          : `<div>Bus 1: ${route.operatingHours}</div><br>
            <div>Bus 2: ${route.operatingHours}</div>`;
       document.querySelector(".service-times").innerHTML = serviceTimesHTML;
 
@@ -346,8 +346,8 @@ class RouteScheduleHandler {
       const lastBusHTML =
         route.buses === 1
           ? `<div class="text-danger">${route.lastBus}</div>`
-          : `<div class="text-danger">${route.lastBus.bus1}</div>
-           <div class="text-danger">${route.lastBus.bus2}</div>`;
+          : `<div class="text-danger">Bus 1: ${route.lastBus.bus1}</div><br>
+           <div class="text-danger">Bus 2: ${route.lastBus.bus2}</div>`;
       document.querySelector(".last-bus-times").innerHTML = lastBusHTML;
 
       // 更新站點和巴士位置
