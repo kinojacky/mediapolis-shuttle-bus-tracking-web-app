@@ -59,6 +59,16 @@ header {
   border-bottom-right-radius: 2rem;
 }
 
+.title-panel {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 5rem;
+  border-radius: 1.2rem;
+  font-size: 1.4rem;
+  background-color: #EECBB3;
+}
+
 .status-panel {
   width: 100%;
   display: inline-flex;
