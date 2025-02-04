@@ -189,15 +189,15 @@ header {
 
 @keyframes moving-3s {
   0% {
-    transform: translate(0, 5px);
+    transform: translate(0, 0px);
   }
 
   50% {
-    transform: translate(0, -5px);
+    transform: translate(0, -10px);
   }
 
   100% {
-    transform: translate(0, 5px);
+    transform: translate(0, 0px);
   }
 }
 
@@ -231,11 +231,11 @@ header {
 }
 
 .bg-footer {
-  height: 24rem;
+  height: 26rem;
   background-image: url('../imgs/bg_footer_m.png');
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: top;
 }
 
 .img-bee {

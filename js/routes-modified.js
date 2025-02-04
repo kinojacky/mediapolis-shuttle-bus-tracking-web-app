@@ -146,26 +146,48 @@ class RouteScheduleHandler {
       return null;
     }
 
-    // Weekday route determination
-    if (currentTime >= "07:30" && currentTime < "10:00") {
-      this.currentRoute = "morning";
-    } else if (currentTime >= "11:30" && currentTime < "14:00") {
-      if (day === 2 || day === 4) {
-        // Tuesday or Thursday
-        this.currentRoute = "lunchTT";
-      } else if (day === 1 || day === 3 || day === 5) {
-        // Monday, Wednesday, Friday
-        this.currentRoute = "lunchMWF";
+    // 檢查每個時段是否在服務前1分鐘或後30秒
+    const periods = [
+      { time: "07:30-10:00", route: "morning" },
+      {
+        time: "11:30-14:00",
+        route:
+          day === 2 || day === 4
+            ? "lunchTT"
+            : day === 1 || day === 3 || day === 5
+            ? "lunchMWF"
+            : null,
+      },
+      { time: "17:00-19:30", route: "evening" },
+    ];
+
+    for (const period of periods) {
+      const [start, end] = period.time.split("-");
+
+      // 檢查是否在服務時間內
+      if (currentTime >= start && currentTime <= end) {
+        this.currentRoute = period.route;
+        return this.currentRoute;
       }
-    } else if (currentTime >= "17:00" && currentTime < "19:30") {
-      this.currentRoute = "evening";
-    } else {
-      this.currentRoute = null;
+
+      // 檢查是否在服務前1分鐘
+      if (TimingUtils.isPreServiceTime(start)) {
+        this.currentRoute = period.route;
+        return this.currentRoute;
+      }
+
+      // 檢查是否在服務後30秒
+      if (TimingUtils.isPostServiceTime(end)) {
+        this.currentRoute = period.route;
+        return this.currentRoute;
+      }
     }
 
-    return this.currentRoute;
+    this.currentRoute = null;
+    return null;
   }
 
+  // 修改 updateBusLocations 方法
   updateBusLocations() {
     if (!this.currentRoute) {
       this.busLocations = [];
@@ -183,7 +205,12 @@ class RouteScheduleHandler {
     const activeBuses = route.schedule.filter((schedule) => {
       const startTime = schedule.times[0];
       const endTime = schedule.times[schedule.times.length - 1];
-      return currentTime >= startTime && currentTime <= endTime;
+
+      // 檢查是否在服務時間內或應該提前顯示
+      return (
+        (currentTime >= startTime && currentTime <= endTime) ||
+        TimingUtils.shouldShowBusEarly(startTime)
+      );
     });
 
     this.busLocations = activeBuses.map((bus) => {
@@ -227,7 +254,7 @@ class RouteScheduleHandler {
     route.schedule.forEach((schedule) => {
       html += `
         <tr>
-          ${route.buses > 1 ? `<td class="text-center">${schedule.bus || 1}</td>` : ""}
+          ${route.buses > 1 ? `<td>${schedule.bus || 1}</td>` : ""}
           ${schedule.times.map((time) => `<td>${time}</td>`).join("")}
         </tr>
       `;
@@ -260,7 +287,9 @@ class RouteScheduleHandler {
       html += `
         <div class="station-container">
           <div class="d-flex align-items-center">
-            <div class="station-marker me-2"></div>
+            <div class="station-marker me-2">
+            ${index === 0 ? "<i class='bi bi-triangle-fill rotate180'></i>" : ""}
+            </div>
             <div>${stop}</div>
           </div>
           ${
@@ -279,7 +308,7 @@ class RouteScheduleHandler {
                     ? `<div class="bus-number">${bus.busId}</div>`
                     : ""
                 }
-                <i class="bi bi-chevron-double-down animated-hover"></i>
+                <!-- <i class="bi bi-chevron-double-down animated-hover"></i> --->
               </div>
             `
               )
@@ -308,17 +337,17 @@ class RouteScheduleHandler {
       // 更新服務時間
       const serviceTimesHTML =
         route.buses === 1
-          ? `<div>${route.operatingHours}</div>`
-          : `<div>Bus 1: ${route.operatingHours}</div>
+          ? `<div>Service Hours: ${route.operatingHours}</div>`
+          : `<div>Bus 1: ${route.operatingHours}</div><br>
            <div>Bus 2: ${route.operatingHours}</div>`;
       document.querySelector(".service-times").innerHTML = serviceTimesHTML;
 
       // 更新末班車時間
       const lastBusHTML =
         route.buses === 1
-          ? `<div class="text-red">${route.lastBus}</div>`
-          : `<div class="text-red">${route.lastBus.bus1}</div>
-           <div class="text-red">${route.lastBus.bus2}</div>`;
+          ? `<div class="text-danger">${route.lastBus}</div>`
+          : `<div class="text-danger">Bus 1: ${route.lastBus.bus1}</div><br>
+           <div class="text-danger">Bus 2: ${route.lastBus.bus2}</div>`;
       document.querySelector(".last-bus-times").innerHTML = lastBusHTML;
 
       // 更新站點和巴士位置
