@@ -30,6 +30,12 @@ button.navbar-toggler i.bi {
   -webkit-text-stroke-width: 1px;
 }
 
+.app-status {
+  position: relative;
+  top: -1rem;
+  font-size: 0.5rem;
+}
+
 .navbar-nav .nav-item {
   text-align: center;
   padding: 0.5rem 0;
