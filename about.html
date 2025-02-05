@@ -42,11 +42,66 @@
     <div class="row">
       <div class="col-12 text-center">
         <div class="title-panel mb-4">
-          <i class="bi bi-floppy2"></i>
-          <span class="fw-bold">ABOUT</span>
+          <i class="bi bi-bus-front-fill"></i>
+          <span class="fw-bold">ABOUT MEDIAPOLIS SHUTTLE</span>
         </div>
       </div>
       <div class="col-12">
+        <div class="card border-0 shadow-lg">
+          <div class="card-body p-4">
+            <div class="mb-4">
+              <h5 class="text-orange">Welcome aboard! 🚌</h5>
+              <p>The Mediapolis Shuttle Bus service is your convenient connection between campus and key locations around the area. Whether you're heading to class, grabbing lunch at nearby food centres, or commuting via MRT, we've got you covered!</p>
+            </div>
+          
+            <div class="mb-4">
+              <h5 class="text-orange">Our Service</h5>
+              <p>We operate three distinct service periods on weekdays:</p>
+              <ul class="list-unstyled ps-3">
+                <li>🌅 Morning Shuttle (7:30 AM - 10:00 AM)</li>
+                <li>🍱 Lunch Service (11:30 AM - 2:00 PM)</li>
+                <li>🌆 Evening Routes (5:00 PM - 7:30 PM)</li>
+              </ul>
+            </div>
+          
+            <div class="mb-4">
+              <h5 class="text-orange">Key Features</h5>
+              <ul class="list-unstyled ps-3">
+                <li>✨ Real-time bus location tracking</li>
+                <li>📱 Mobile-friendly interface</li>
+                <li>🕒 Accurate time predictions</li>
+                <li>📍 Multiple route options</li>
+              </ul>
+            </div>
+          
+            <div class="mb-4">
+              <h5 class="text-orange">Routes We Serve</h5>
+              <p>Our shuttle services connect you to:</p>
+              <ul class="list-unstyled ps-3">
+                <li>🚇 MRT Stations: Buona Vista & one-north</li>
+                <li>🏫 Campus facilities</li>
+                <li>🍜 Food centres: Holland Drive & Ghim Moh</li>
+                <li>🛍️ The Star Vista</li>
+              </ul>
+            </div>
+
+            <ul class="nav justify-content-center mt-5">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#" data-bs-toggle="modal" data-bs-target="#disclaimerModal">Disclaimer</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#creditsModal">Credits</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="https://github.com/kinojacky" target="_blank">Source Code</a>
+              </li>
+            </ul>
+          
+            <div class="mt-5 text-center">
+              <small class="text-muted">&copy; <span id="currentYear">2025</span> Mediapolis Shuttle Service</small>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -65,7 +120,52 @@
     </div>
   </footer>
 
+  <!-- Disclaimer Modal -->
+  <div class="modal fade" id="disclaimerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="disclaimerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger">
+          <h5 class="modal-title text-white" id="disclaimerModalLabel">Disclaimer</h5>
+        </div>
+        <div class="modal-body">
+          <p class="mb-3">This web application is an <strong class="text-danger">unofficial</strong> shuttle bus schedule tracking tool and is for reference only.</p>
+          <p class="mb-3">The shuttle bus schedule may be adjusted based on actual conditions. Please refer to on-site announcements. For any questions or suggestions, please visit the Campus Estate Management portal in HOME Intranet which is accessible under the "Departments & Groups" tab.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">I Understand</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Credits Modal -->
+  <div class="modal fade" id="creditsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="creditsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-secondary-subtle">
+          <h5 class="modal-title" id="creditsModalLabel">Credits</h5>
+        </div>
+        <div class="modal-body text-center">
+          <p class="mb-3"><a href="https://favicon.io/emoji-favicons/">Favicon created by John Sorrentino</a></p>
+          <p class="mb-3"><a href="https://www.freepik.com/free-vector/gradient-technology-logo_4412734.htm#fromView=search&page=1&position=25&uuid=5a103ad6-b030-4d09-88b2-640cbb685b42&new_detail=true&query=logo">Logo Image by pikisuperstar on Freepik</a></p>
+          <p class="mb-3"><a href="https://www.freepik.com/free-vector/id-card-template_2345870.htm#fromView=image_search&page=1&position=0&uuid=1f565d58-4321-4e1f-bcb1-d2ff918b7611&query=background+luggage+pattern">Badge ID Image <br>by freepik</a></p>
+          <p class="mb-3"><a href="https://thenounproject.com/">Bee icon created by Estevão Sarcinelli <br>from the Noun Project</a></p>
+          <p class="mb-3"><a href="https://thenounproject.com/">User icon created by Gray <br>from the Noun Project</a></p>
+          <p class="mb-0"><a href="https://thenounproject.com/">Durian and Seat icons created by iconnect</a></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Set current year
+    document.getElementById("currentYear").textContent = new Date().getFullYear();
+  </script>
 </body>
 
 </html>
