@@ -175,8 +175,9 @@ header {
   position: relative;
 }
 
-.bus-icon .bi-chevron-double-down {
-  margin-left: 0.8rem;
+.bus-icon svg {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 .bus-number {
@@ -204,15 +205,36 @@ header {
 
 @keyframes moving-3s {
   0% {
-    transform: translate(0, 0px);
+    transform: translate(0, 5px);
   }
 
   50% {
-    transform: translate(0, -10px);
+    transform: translate(0, -5px);
   }
 
   100% {
-    transform: translate(0, 0px);
+    transform: translate(0, 5px);
+  }
+}
+
+.animated-blink {
+  animation-name: blink-1s;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes blink-1s {
+  0% {
+    opacity: 1;
+  }
+
+  30% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
 
