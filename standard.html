@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>接駁車時間表</title>
+  <!-- Bootstrap 5.3.3 CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --secondary-color: #e9f0ff;
+      --accent-color: #0a58ca;
+      --light-color: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .navbar {
+      background-color: var(--primary-color);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card {
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      margin-bottom: 20px;
+      border: none;
+    }
+
+    .card-header {
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 10px 10px 0 0 !important;
+      padding: 15px;
+    }
+
+    .time-selector {
+      margin: 20px 0;
+      display: flex;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .time-selector .btn {
+      margin-right: 10px;
+      min-width: 120px;
+      font-weight: 500;
+    }
+
+    .time-selector .btn.active {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+
+    .route-info {
+      background-color: var(--secondary-color);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .timetable th {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .timetable tr:nth-child(even) {
+      background-color: var(--secondary-color);
+    }
+
+    .operation-days {
+      display: inline-block;
+      padding: 3px 8px;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin-right: 5px;
+    }
+
+    .bus-number {
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .last-bus {
+      font-weight: bold;
+      color: #dc3545;
+    }
+
+    @media (max-width: 768px) {
+      .timetable {
+        font-size: 0.85rem;
+      }
+
+      .route-info {
+        padding: 10px;
+      }
+
+      .time-selector .btn {
+        min-width: 100px;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-bus-front"></i> 接駁車時間表
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">首頁</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">關於我們</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">聯絡資訊</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container my-4">
+    <div class="card">
+      <div class="card-header">
+        <h1 class="h4 mb-0">校園接駁車時間表</h1>
+      </div>
+      <div class="card-body">
+        <!-- Time Selector Buttons -->
+        <div class="time-selector" id="timeSelector">
+          <!-- Dynamically generated time period buttons will be inserted here -->
+        </div>
+
+        <!-- Timetable Container -->
+        <div id="timetableContainer">
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">載入中...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 mt-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>接駁車服務</h5>
+          <p>為師生與訪客提供校園內部及鄰近地區的便捷交通服務。</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <h5>聯絡我們</h5>
+          <p>電話：(02) 1234-5678<br>Email：shuttle@example.edu.tw</p>
+        </div>
+      </div>
+      <hr>
+      <div class="text-center">
+        <p class="mb-0">© 2025 校園接駁車服務. 版權所有.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5.3.3 JS Bundle -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+
+  <!-- App JavaScript -->
+  <script>
+    // Sample JSON route configuration (in real-world usage, this would be loaded from an external source)
+    const routeConfig = {
+      "timePeriods": {
+        "morning": {
+          "name": "早晨班次",
+          "description": "Campus → one-north MRT → Buona Vista MRT",
+          "operationHours": "07:00 - 10:00",
+          "operationDays": ["星期一至星期五"],
+          "buses": [
+            {
+              "busNumber": 1,
+              "stops": ["Campus", "one-north MRT", "Buona Vista MRT"],
+              "schedule": [
+                { "Campus": "07:00", "one-north MRT": "07:10", "Buona Vista MRT": "07:20" },
+                { "Campus": "07:30", "one-north MRT": "07:40", "Buona Vista MRT": "07:50" },
+                { "Campus": "08:00", "one-north MRT": "08:10", "Buona Vista MRT": "08:20" },
+                { "Campus": "08:30", "one-north MRT": "08:40", "Buona Vista MRT": "08:50" },
+                { "Campus": "09:00", "one-north MRT": "09:10", "Buona Vista MRT": "09:20" },
+                { "Campus": "09:30", "one-north MRT": "09:40", "Buona Vista MRT": "09:50" }
+              ]
+            }
+          ]
+        },
+        "lunch": {
+          "name": "午餐班次",
+          "description": "Campus → Food Court → Shopping Mall",
+          "operationHours": "11:30 - 14:00",
+          "operationDays": ["星期一/三/五", "星期二/四"],
+          "buses": [
+            {
+              "busNumber": 1,
+              "days": ["星期一", "星期三", "星期五"],
+              "stops": ["Campus", "Food Court", "Shopping Mall"],
+              "schedule": [
+                { "Campus": "11:30", "Food Court": "11:40", "Shopping Mall": "11:50" },
+                { "Campus": "12:30", "Food Court": "12:40", "Shopping Mall": "12:50" },
+                { "Campus": "13:30", "Food Court": "13:40", "Shopping Mall": "13:50" }
+              ]
+            },
+            {
+              "busNumber": 1,
+              "days": ["星期二", "星期四"],
+              "stops": ["Campus", "Food Court", "Shopping Mall"],
+              "schedule": [
+                { "Campus": "11:45", "Food Court": "11:55", "Shopping Mall": "12:05" },
+                { "Campus": "12:45", "Food Court": "12:55", "Shopping Mall": "13:05" },
+                { "Campus": "13:45", "Food Court": "13:55", "Shopping Mall": "14:05" }
+              ]
+            }
+          ]
+        },
+        "evening": {
+          "name": "晚間班次",
+          "description": "Campus → MRT → Residential Areas",
+          "operationHours": "17:00 - 22:00",
+          "operationDays": ["星期一至星期五"],
+          "buses": [
+            {
+              "busNumber": 1,
+              "stops": ["Campus", "MRT", "Residence A"],
+              "schedule": [
+                { "Campus": "17:00", "MRT": "17:15", "Residence A": "17:30" },
+                { "Campus": "18:00", "MRT": "18:15", "Residence A": "18:30" },
+                { "Campus": "19:00", "MRT": "19:15", "Residence A": "19:30" },
+                { "Campus": "20:00", "MRT": "20:15", "Residence A": "20:30" },
+                { "Campus": "21:00", "MRT": "21:15", "Residence A": "21:30" }
+              ]
+            },
+            {
+              "busNumber": 2,
+              "stops": ["Campus", "MRT", "Residence B"],
+              "schedule": [
+                { "Campus": "17:30", "MRT": "17:45", "Residence B": "18:00" },
+                { "Campus": "18:30", "MRT": "18:45", "Residence B": "19:00" },
+                { "Campus": "19:30", "MRT": "19:45", "Residence B": "20:00" },
+                { "Campus": "20:30", "MRT": "20:45", "Residence B": "21:00" },
+                { "Campus": "21:30", "MRT": "21:45", "Residence B": "22:00" }
+              ]
+            }
+          ]
+        },
+        "weekend": {
+          "name": "週末班次",
+          "description": "Campus → Shopping Mall → Tourist Spot",
+          "operationHours": "10:00 - 18:00",
+          "operationDays": ["星期六", "星期日"],
+          "buses": [
+            {
+              "busNumber": 1,
+              "stops": ["Campus", "Shopping Mall", "Tourist Spot"],
+              "schedule": [
+                { "Campus": "10:00", "Shopping Mall": "10:20", "Tourist Spot": "10:40" },
+                { "Campus": "12:00", "Shopping Mall": "12:20", "Tourist Spot": "12:40" },
+                { "Campus": "14:00", "Shopping Mall": "14:20", "Tourist Spot": "14:40" },
+                { "Campus": "16:00", "Shopping Mall": "16:20", "Tourist Spot": "16:40" }
+              ]
+            }
+          ]
+        }
+      }
+    };
+
+    // Function to initialize the app
+    function initApp() {
+      renderTimeButtons();
+      // Select first time period by default
+      const firstTimePeriod = Object.keys(routeConfig.timePeriods)[0];
+      selectTimePeriod(firstTimePeriod);
+    }
+
+    // Function to render time selection buttons
+    function renderTimeButtons() {
+      const timeSelector = document.getElementById('timeSelector');
+      timeSelector.innerHTML = '';
+
+      Object.keys(routeConfig.timePeriods).forEach(period => {
+        const timeData = routeConfig.timePeriods[period];
+        const button = document.createElement('button');
+        button.className = 'btn btn-outline-primary';
+        button.setAttribute('data-period', period);
+        button.textContent = timeData.name;
+
+        button.addEventListener('click', () => {
+          // Remove active class from all buttons
+          document.querySelectorAll('.time-selector .btn').forEach(btn => {
+            btn.classList.remove('active');
+          });
+
+          // Add active class to clicked button
+          button.classList.add('active');
+
+          // Display timetable for selected period
+          selectTimePeriod(period);
+        });
+
+        timeSelector.appendChild(button);
+      });
+    }
+
+    // Function to select and display a time period
+    function selectTimePeriod(period) {
+      const timeData = routeConfig.timePeriods[period];
+      const container = document.getElementById('timetableContainer');
+
+      // Update active button
+      document.querySelectorAll('.time-selector .btn').forEach(btn => {
+        if (btn.getAttribute('data-period') === period) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+
+      // Create HTML content for the selected time period
+      let html = `
+                <div class="route-info">
+                    <h2 class="h4 mb-2">${timeData.name}</h2>
+                    <p class="mb-1"><strong>路線描述:</strong> ${timeData.description}</p>
+                    <p class="mb-1"><strong>營運時間:</strong> ${timeData.operationHours}</p>
+                    <p class="mb-0"><strong>營運日:</strong> 
+                        ${timeData.operationDays.map(day => `<span class="operation-days">${day}</span>`).join(' ')}
+                    </p>
+                </div>
+            `;
+
+      // Display bus count if more than one
+      if (timeData.buses.length > 1) {
+        html += `<p><strong>車輛數量:</strong> ${timeData.buses.length} 輛</p>`;
+      }
+
+      // Generate timetables for each bus
+      timeData.buses.forEach(bus => {
+        const hasSpecificDays = bus.hasOwnProperty('days');
+
+        html += `
+                    <div class="mb-4">
+                        <h3 class="h5 mb-3">
+                            <span class="bus-number">巴士 #${bus.busNumber}</span>
+                            ${hasSpecificDays ? ` - <span class="operation-days">${bus.days.join('/')}</span>` : ''}
+                        </h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered timetable">
+                                <thead>
+                                    <tr>
+                                        ${bus.stops.map(stop => `<th>${stop}</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                `;
+
+        // Add schedule rows
+        bus.schedule.forEach((trip, index) => {
+          const isLastTrip = index === bus.schedule.length - 1;
+
+          html += `<tr ${isLastTrip ? 'class="last-bus"' : ''}>`;
+          bus.stops.forEach(stop => {
+            html += `<td>${trip[stop]}</td>`;
+          });
+          html += `</tr>`;
+        });
+
+        html += `
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-end mb-0 text-danger">
+                            <small>
+                                <strong>末班車時間:</strong> ${bus.schedule[bus.schedule.length - 1][bus.stops[0]]}
+                                (抵達終點站 ${bus.schedule[bus.schedule.length - 1][bus.stops[bus.stops.length - 1]]})
+                            </small>
+                        </p>
+                    </div>
+                `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Initialize the app when the document is loaded
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+
+</html>
