@@ -1,12 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
-:root {
-  --primary-color: #0d6efd;
-  --secondary-color: #e9f0ff;
-  --accent-color: #0a58ca;
-  --light-color: #f8f9fa;
-}
-
 html {
   font-family: sans-serif;
   line-height: 1.2;
@@ -272,88 +265,6 @@ header {
 
 .require-attention {
   color: #E95C50;
-}
-
-.current-date-container {
-  border-left: 4px solid var(--primary-color);
-}
-
-.table-success {
-  background-color: rgba(25, 135, 84, 0.2) !important;
-}
-
-tr.table-secondary td {
-  color: #6c757d;
-}
-
-.time-selector {
-  margin: 20px 0;
-  display: flex;
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
-
-.time-selector .btn {
-  margin-right: 10px;
-  min-width: 120px;
-  font-weight: 500;
-}
-
-.time-selector .btn.active {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-}
-
-.route-info {
-  background-color: var(--secondary-color);
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-}
-
-.timetable th {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.timetable tr:nth-child(even) {
-  background-color: var(--secondary-color);
-}
-
-.operation-days {
-  display: inline-block;
-  padding: 3px 8px;
-  background-color: var(--accent-color);
-  color: white;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  margin-right: 5px;
-}
-
-.bus-number {
-  font-weight: bold;
-  color: var(--primary-color);
-}
-
-.last-bus {
-  font-weight: bold;
-  color: #dc3545;
-}
-
-@media (max-width: 768px) {
-  .timetable {
-    font-size: 0.85rem;
-  }
-
-  .route-info {
-    padding: 10px;
-  }
-
-  .time-selector .btn {
-    min-width: 100px;
-    padding: 6px 12px;
-    font-size: 0.85rem;
-  }
 }
 
 .bg-footer {

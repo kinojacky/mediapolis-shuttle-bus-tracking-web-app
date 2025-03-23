@@ -59,7 +59,36 @@
   </header>
 
   <!-- 主要動態時間表 -->
-  <div class="container main-timetable py-4"></div>
+  <!-- <div class="container main-timetable py-4"></div> -->
+  <div class="container py-4">
+    <!-- Current Date Display -->
+    <div class="current-date-container mb-3 p-2 bg-light rounded">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <span class="fw-bold" id="currentDate">載入日期中...</span>
+          <span class="ms-2 text-secondary" id="currentDayOfWeek"></span>
+        </div>
+        <div class="text-primary" id="currentTimeInfo">
+          <span class="badge bg-primary" id="currentTimeRoute">-</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Time Selector Buttons -->
+    <div class="time-selector" id="timeSelector">
+      <!-- Dynamically generated time period buttons will be inserted here -->
+    </div>
+    
+    <!-- Timetable Container -->
+    <div id="timetableContainer">
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">載入中...</p>
+      </div>
+    </div>
+  </div>
 
   <!-- 注意事項 -->
   <div class="container py-4">
