@@ -129,8 +129,8 @@ function updateCurrentDate() {
     currentTimeRoute.textContent = "Off Service";
     currentTimeRoute.className = "badge bg-danger";
   } else {
-    currentTimeRoute.textContent = `目前班次: ${routeConfig[currentPeriod].name}`;
-    currentTimeRoute.className = "badge bg-primary";
+    currentTimeRoute.innerHTML = `Current Bus Runs:<br> ${routeConfig[currentPeriod].name}`;
+    currentTimeRoute.className = "badge bg-success";
   }
 }
 
@@ -211,7 +211,7 @@ function renderTimeButtons() {
   const noServiceButton = document.createElement("button");
   noServiceButton.className = "btn rounded-pill btn-outline-secondary";
   noServiceButton.setAttribute("data-period", "none");
-  noServiceButton.textContent = "No Service Period";
+  noServiceButton.textContent = "No Shuttle Service";
 
   noServiceButton.addEventListener("click", () => {
     document.querySelectorAll(".time-selector .btn").forEach((btn) => {
@@ -254,20 +254,20 @@ function selectTimePeriod(period) {
   let html = `
     <div class="route-info">
       <h2 class="h4 mb-2">${timeData.name}</h2>
-      <p class="mb-1"><strong>路線描述:</strong> ${
+      <p class="mb-1"><strong>Route Info:</strong><br> ${
         timeData.description
       }</p>
-      <p class="mb-1"><strong>營運時間:</strong> ${
+      <p class="mb-1"><strong>Service Hours:</strong> ${
         timeData.operatingHours
       }</p>
-      <p class="mb-0"><strong>營運日:</strong> 
+      <p class="mb-0"><strong>Operating Days:</strong> 
         <span class="operation-days">
           ${
             period.includes("lunch")
               ? period === "lunchMWF"
-                ? "星期一/三/五"
-                : "星期二/四"
-              : "星期一至星期五"
+                ? "Mon / Wed / Fri"
+                : "Tue / Thu"
+              : "Mon to Fri"
           }
         </span>
       </p>
@@ -276,8 +276,8 @@ function selectTimePeriod(period) {
 
   // Display bus count if more than one
   if (timeData.buses > 1) {
-    html += `<p><strong>車輛數量:</strong> ${timeData.buses} 輛</p>`;
-    html += `<p><strong>車輛頻率:</strong> 每 ${timeData.busFrequency} 分鐘一班</p>`;
+    html += `<p class="mb-0"><strong>Number of Vehicles:</strong> ${timeData.buses} buses</p>`;
+    html += `<p><strong>Frequency:</strong> Every ${timeData.busFrequency} minutes</p>`;
   }
 
   // Generate timetable
@@ -289,8 +289,8 @@ function selectTimePeriod(period) {
             <tr>
               ${
                 period === "evening"
-                  ? "<th>車次</th><th>車輛</th>"
-                  : "<th>車次</th>"
+                  ? "<th>No.</th><th>Buses</th>"
+                  : "<th>No.</th>"
               }
               ${timeData.stops
                 .map((stop) => `<th>${stop}</th>`)
@@ -348,7 +348,7 @@ function selectTimePeriod(period) {
     if (period === "evening") {
       html += `<tr class="${rowClass}">`;
       html += `<td>${trip.id}</td>`;
-      html += `<td>巴士 ${trip.bus}</td>`;
+      html += `<td>Bus ${trip.bus}</td>`;
       trip.times.forEach((time, idx) => {
         // Add badge for departing soon
         const timeDisplay =
@@ -382,16 +382,16 @@ function selectTimePeriod(period) {
   // Add last bus info
   if (period === "evening") {
     html += `
-      <p class="text-end mb-0 text-danger">
+      <p class="mb-0 text-danger">
         <small>
-          <strong>末班車時間:</strong> 
-          巴士 1: ${timeData.lastBus.bus1} (抵達終點站 ${
+          <strong>Last Bus Time:</strong><br> 
+          Bus 1: ${timeData.lastBus.bus1} (arrives at final stop at ${
       timeData.schedule.find(
         (s) => s.bus === 1 && s.times[0] === timeData.lastBus.bus1
       ).times[2] || timeData.schedule[timeData.schedule.length - 1].times[2]
     })
           <br>
-          巴士 2: ${timeData.lastBus.bus2} (抵達終點站 ${
+          Bus 2: ${timeData.lastBus.bus2} (arrives at final stop at ${
       timeData.schedule.find(
         (s) => s.bus === 2 && s.times[0] === timeData.lastBus.bus2
       ).times[2] || ""
@@ -401,10 +401,10 @@ function selectTimePeriod(period) {
     `;
   } else {
     html += `
-      <p class="text-end mb-0 text-danger">
+      <p class="mb-0 text-danger">
         <small>
-          <strong>末班車時間:</strong> ${timeData.lastBus}
-          (抵達終點站 ${
+          <strong>Last Bus Time:</strong><br> ${timeData.lastBus}
+          (arrives at final stop at ${
             timeData.schedule[timeData.schedule.length - 1]
               .times[2]
           })
@@ -427,14 +427,14 @@ function showNoServiceMessage() {
       <div class="mb-4">
         <i class="bi bi-moon-stars fs-1 text-secondary"></i>
       </div>
-      <h3 class="h4 mb-3">目前非接駁車服務時段</h3>
-      <p class="text-secondary">請查看其他時段的班次資訊</p>
+      <h3 class="h4 mb-3">The Shuttle Isn't Running Right Now</h3>
+      <p class="text-secondary">Check out the schedule below for our regular service times.</p>
       <div class="mt-4">
-        <p><strong>服務時段：</strong></p>
+        <p><strong>Shuttle Hours:</strong></p>
         <ul class="list-unstyled">
-          <li class="mb-2">早晨: 07:30 - 10:00 (週一至週五)</li>
-          <li class="mb-2">午餐: 11:30 - 14:00 (週一至週五)</li>
-          <li class="mb-2">晚間: 17:00 - 19:30 (週一至週五)</li>
+          <li class="mb-2">Morning: 7:30 AM - 10:00 AM (Mon-Fri)</li>
+          <li class="mb-2">Lunch Time: 11:30 AM - 2:00 PM (Mon-Fri)</li>
+          <li class="mb-2">Evening: 5:00 PM - 7:30 PM (Mon-Fri)</li>
         </ul>
     </div>
     </div>

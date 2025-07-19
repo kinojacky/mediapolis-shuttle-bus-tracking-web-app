@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 :root {
-  --primary-color: #0d6efd;
-  --secondary-color: #e9f0ff;
-  --accent-color: #0a58ca;
+  --primary-color: #FF9859;
+  --secondary-color: #EECBB2;
+  --accent-color: #2F314D;
   --light-color: #f8f9fa;
+  --gray-color: #949494;
 }
 
 html {
@@ -302,20 +303,13 @@ tr.table-secondary td {
   font-weight: 500;
 }
 
-@media (min-width: 576px) {
-  .time-selector {
-    flex-direction: row;
-  }
-  
-  .time-selector .btn {
-    margin-left: 0;
-    margin-right: 0.8rem;
-    width: auto;
-    min-width: 20rem;
-  }
+.time-selector .btn-outline-primary {
+  color: var(--accent-color);
+  border: 1px solid var(--accent-color);
 }
 
 .time-selector .btn.active {
+  color: #FAFAFA;
   background-color: var(--accent-color);
   border-color: var(--accent-color);
 }
@@ -369,6 +363,19 @@ tr.table-secondary td {
     min-width: 100px;
     padding: 6px 12px;
     font-size: 0.85rem;
+  }
+}
+
+@media (min-width: 576px) {
+  .time-selector {
+    flex-direction: row;
+  }
+  
+  .time-selector .btn {
+    margin-left: 0;
+    margin-right: 0.8rem;
+    width: auto;
+    min-width: 20rem;
   }
 }
 
