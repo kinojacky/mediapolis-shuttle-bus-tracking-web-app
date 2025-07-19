@@ -55,14 +55,29 @@
     <div class="container py-4">
       <div class="row">
         <div class="col-12">
-          <div class="status-panel mb-4 p-3">
-            <div class="status-indicator status-on"></div>
-            <span class="fw-bold">ON SERVICE</span>
+          <!-- Current Date Display -->
+          <div class="current-date-container mb-3 p-2 bg-light rounded">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <span class="fw-bold" id="currentDate">Loading Date and Time...</span>
+                (<span class="text-secondary" id="currentDayOfWeek"></span>)
+                <br>
+                <span id="currentTime" class="fw-bold text-secondary current-date-time"></span>
+              </div>
+              <div class="text-primary" id="currentTimeInfo">
+                <span class="badge bg-primary" id="currentTimeRoute">-</span>
+              </div>
+            </div>
           </div>
 
+          <!-- <div class="status-panel mb-4 p-3">
+            <div class="status-indicator status-on"></div>
+            <span class="fw-bold">ON SERVICE</span>
+          </div> -->
+
           <div class="text-center">
-            <h4 class="greeting mb-2">Good Evening, Off-Duty Hero!</h4>
-            <h4 class="message mb-2">Don't be blue, is Monday</h4>
+            <h5 class="greeting mb-0">Good Evening, Off-Duty Hero!</h5>
+            <h5 class="message mb-0">Don't be blue, is Monday</h5>
             <h5 class="look-where mb-0">Look where I am now...</h5>
           </div>
         </div>
@@ -73,18 +88,6 @@
   <!-- 主要動態時間表 -->
   <!-- <div class="container main-timetable py-4"></div> -->
   <div class="container py-4">
-    <!-- Current Date Display -->
-    <div class="current-date-container mb-3 p-2 bg-light rounded">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <span class="fw-bold" id="currentDate">載入日期中...</span>
-          <span class="ms-2 text-secondary" id="currentDayOfWeek"></span>
-        </div>
-        <div class="text-primary" id="currentTimeInfo">
-          <span class="badge bg-primary" id="currentTimeRoute">-</span>
-        </div>
-      </div>
-    </div>
     
     <!-- Time Selector Buttons -->
     <div class="time-selector" id="timeSelector">
@@ -97,7 +100,7 @@
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <p class="mt-2">載入中...</p>
+        <p class="mt-2">Loading...</p>
       </div>
     </div>
   </div>
@@ -162,22 +165,22 @@
     
       <div class="col-10">
         <div class="row justify-content-center">
-          <div class="col-4 col-md-2 pb-4">
+          <div class="col-4 col-md-2 col-lg-1 pb-4 px-1">
             <img src="imgs/img_no_pet.png" alt="No Pet" class="img-fluid">
           </div>
-          <div class="col-4 col-md-2 pb-4">
+          <div class="col-4 col-md-2 col-lg-1 pb-4 px-1">
             <img src="imgs/img_no_guest.png" alt="No Guest" class="img-fluid">
           </div>
-          <div class="col-4 col-md-2 pb-4">
+          <div class="col-4 col-md-2 col-lg-1 pb-4 px-1">
             <img src="imgs/img_no_standing.png" alt="No Staning" class="img-fluid">
           </div>
-          <div class="col-4 col-md-2 pb-4">
+          <div class="col-4 col-md-2 col-lg-1 pb-4 px-1">
             <img src="imgs/img_no_smoking.png" alt="No Smoking" class="img-fluid">
           </div>
-          <div class="col-4 col-md-2 pb-4">
+          <div class="col-4 col-md-2 col-lg-1 pb-4 px-1">
             <img src="imgs/img_no_food.png" alt="No Food" class="img-fluid">
           </div>
-          <div class="col-4 col-md-2 pb-4">
+          <div class="col-4 col-md-2 col-lg-1 pb-4 px-1">
             <img src="imgs/img_no_durian.png" alt="No Durian" class="img-fluid">
           </div>
         </div>
@@ -192,13 +195,14 @@
           <img src="imgs/img_shuttle_bee.png" alt="" class="img-bee">
           <p class="mb-0">Shuttle Bee is working hard to your destination…</p>
         </div>
-        <div class="col-12 small pb-5">
+        <div class="col-12 small text-center pb-5">
           Disclaimer: This web application is an <strong class="text-danger">unofficial</strong> shuttle bus schedule tracking tool and is for reference only.
         </div>
       </div>
     </div>
   </footer>
 
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script src="js/routes.js"></script>
@@ -310,72 +314,72 @@
       }
     }
 
-    function updateServiceStatus() {
-      const now = new Date();
-      const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
-      const currentTime = now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      });
+    // function updateServiceStatus() {
+    //   const now = new Date();
+    //   const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+    //   const currentTime = now.toLocaleTimeString('en-US', {
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     hour12: false
+    //   });
 
-      if (serviceConfig.manualOverride.enabled) {
-        setStatus(serviceConfig.manualOverride.status);
-        return;
-      }
+    //   if (serviceConfig.manualOverride.enabled) {
+    //     setStatus(serviceConfig.manualOverride.status);
+    //     return;
+    //   }
 
-      const isOperatingDay = serviceConfig.operatingHours[0].days.includes(currentDay);
-      if (!isOperatingDay) {
-        setStatus("OFF_SERVICE");
-        return;
-      }
+    //   const isOperatingDay = serviceConfig.operatingHours[0].days.includes(currentDay);
+    //   if (!isOperatingDay) {
+    //     setStatus("OFF_SERVICE");
+    //     return;
+    //   }
 
-      const isServiceTime = serviceConfig.operatingHours[0].periods.some(period => {
-        return currentTime >= period.start && currentTime <= period.end;
-      });
+    //   const isServiceTime = serviceConfig.operatingHours[0].periods.some(period => {
+    //     return currentTime >= period.start && currentTime <= period.end;
+    //   });
 
-      setStatus(isServiceTime ? "ON_SERVICE" : "OFF_SERVICE");
-    }
+    //   setStatus(isServiceTime ? "ON_SERVICE" : "OFF_SERVICE");
+    // }
 
-    function setStatus(status) {
-      const statusIndicator = document.querySelector('.status-indicator');
-      const statusText = document.querySelector('.status-indicator + span');
+    // function setStatus(status) {
+    //   const statusIndicator = document.querySelector('.status-indicator');
+    //   const statusText = document.querySelector('.status-indicator + span');
 
-      if (statusIndicator && statusText) {
-        statusIndicator.className = 'status-indicator';
-        switch (status) {
-          case "ON_SERVICE":
-            statusIndicator.classList.add('status-on');
-            statusText.textContent = "ON SERVICE";
-            break;
-          case "OFF_SERVICE":
-            statusIndicator.classList.add('status-off');
-            statusText.textContent = "OFF SERVICE";
-            break;
-          case "SERVICE_UNKNOWN":
-            statusIndicator.classList.add('status-unknown');
-            statusText.textContent = "SERVICE UNKNOWN";
-            break;
-        }
-      } else {
-        console.error('Status elements not found');
-      }
-    }
+    //   if (statusIndicator && statusText) {
+    //     statusIndicator.className = 'status-indicator';
+    //     switch (status) {
+    //       case "ON_SERVICE":
+    //         statusIndicator.classList.add('status-on');
+    //         statusText.textContent = "ON SERVICE";
+    //         break;
+    //       case "OFF_SERVICE":
+    //         statusIndicator.classList.add('status-off');
+    //         statusText.textContent = "OFF SERVICE";
+    //         break;
+    //       case "SERVICE_UNKNOWN":
+    //         statusIndicator.classList.add('status-unknown');
+    //         statusText.textContent = "SERVICE UNKNOWN";
+    //         break;
+    //     }
+    //   } else {
+    //     console.error('Status elements not found');
+    //   }
+    // }
 
     // Initialize
-    updateServiceStatus();
+    // updateServiceStatus();
     updateGreeting();
 
     // 更新間隔改為每秒
-    setInterval(updateServiceStatus, 60000); // 1分鐘
+    // setInterval(updateServiceStatus, 60000); // 1分鐘
     setInterval(updateGreeting, 60000); // 1分鐘
-    setInterval(() => routeHandler.updateInterface(), 5000); // 5秒
+    // setInterval(() => routeHandler.updateInterface(), 5000); // 5秒
 
     // For testing manual override
     window.toggleManualOverride = function (enabled, status) {
       serviceConfig.manualOverride.enabled = enabled;
       if (status) serviceConfig.manualOverride.status = status;
-      updateServiceStatus();
+      // updateServiceStatus();
     }
 
     console.log(`
