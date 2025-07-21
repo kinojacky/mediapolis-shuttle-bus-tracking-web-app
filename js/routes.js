@@ -271,8 +271,8 @@ function selectTimePeriod(period) {
           }
         </span>
       </p>
-  </div>
-`;
+    </div>
+  `;
 
   // Display bus count if more than one
   if (timeData.buses > 1) {
@@ -295,10 +295,10 @@ function selectTimePeriod(period) {
               ${timeData.stops
                 .map((stop) => `<th>${stop}</th>`)
                 .join("")}
-          </tr>
-        </thead>
-      <tbody>
-`;
+            </tr>
+          </thead>
+        <tbody>
+  `;
 
   // Get today's day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
   const dayOfWeek = now.getDay();
@@ -328,7 +328,7 @@ function selectTimePeriod(period) {
     if (isApplicableToday && period === getCurrentTimePeriod()) {
       if (departureTimeMinutes < currentTimeMinutes) {
         timeStatus = "past"; // Already departed
-      } else if (departureTimeMinutes <= currentTimeMinutes + 15) {
+      } else if (departureTimeMinutes <= currentTimeMinutes + 5) {
         timeStatus = "current"; // Departing soon or now
       } else {
         timeStatus = "upcoming"; // Future departure
@@ -436,7 +436,7 @@ function showNoServiceMessage() {
           <li class="mb-2">Lunch Time: 11:30 AM - 2:00 PM (Mon-Fri)</li>
           <li class="mb-2">Evening: 5:00 PM - 7:30 PM (Mon-Fri)</li>
         </ul>
-    </div>
+      </div>
     </div>
   `;
 }
