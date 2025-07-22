@@ -129,7 +129,8 @@ function updateCurrentDate() {
     currentTimeRoute.textContent = "Off Service";
     currentTimeRoute.className = "badge bg-danger";
   } else {
-    currentTimeRoute.innerHTML = `Current Bus Runs:<br> ${routeConfig[currentPeriod].name}`;
+    currentTimeRoute.innerHTML = `On Service`;
+    // currentTimeRoute.innerHTML = `Current Bus Runs:<br> ${routeConfig[currentPeriod].name}`;
     currentTimeRoute.className = "badge bg-success";
   }
 }
@@ -260,19 +261,19 @@ function selectTimePeriod(period) {
       <p class="mb-1"><strong>Service Hours:</strong> ${
         timeData.operatingHours
       }</p>
-      <p class="mb-0"><strong>Operating Days:</strong> 
-        <span class="operation-days">
-          ${
-            period.includes("lunch")
-              ? period === "lunchMWF"
-                ? "Mon / Wed / Fri"
-                : "Tue / Thu"
-              : "Mon to Fri"
-          }
-        </span>
-      </p>
     </div>
   `;
+      // <p class="mb-0"><strong>Operating Days:</strong> 
+      //   <span class="operation-days">
+      //     ${
+      //       period.includes("lunch")
+      //         ? period === "lunchMWF"
+      //           ? "Mon / Wed / Fri"
+      //           : "Tue / Thu"
+      //         : "Mon to Fri"
+      //     }
+      //   </span>
+      // </p>
 
   // Display bus count if more than one
   if (timeData.buses > 1) {
