@@ -98,7 +98,7 @@ function initApp() {
   selectTimePeriod(currentPeriod);
 
   // Update current time info every minute
-  setInterval(getCurrentTimePeriod, 60000);
+  // setInterval(getCurrentTimePeriod, 60000);
   setInterval(updateCurrentDate, 60000);
 }
 
@@ -316,14 +316,14 @@ function selectTimePeriod(period) {
       // First stop (departure)
       if (timeDiff <= 2 && timeDiff > 0) {
         return { status: 'departing-soon', badge: 'Departing Soon', badgeClass: 'bg-warning' };
-      } else if (timeDiff <= 0 && timeDiff > -5) {
+      } else if (timeDiff <= 0 && timeDiff > -2) {
         return { status: 'departing', badge: 'Departing', badgeClass: 'bg-primary' };
       }
     } else {
       // Intermediate/final stops
-      if (timeDiff <= 4 && timeDiff > 2) {
+      if (timeDiff <= 3 && timeDiff > 2) {
         return { status: 'arriving-soon', badge: 'Arriving Soon', badgeClass: 'bg-info' };
-      } else if (timeDiff <= 3 && timeDiff > 0) {
+      } else if (timeDiff <= 2 && timeDiff > 0) {
         return { status: 'at-station', badge: 'At Station', badgeClass: 'bg-success' };
       }
     }
@@ -353,7 +353,7 @@ function selectTimePeriod(period) {
       const [lastHour, lastMinute] = lastStopTime.split(":").map(Number);
       const lastStopTimeMinutes = lastHour * 60 + lastMinute;
       
-      if (currentTimeMinutes > lastStopTimeMinutes + 15) {
+      if (currentTimeMinutes > lastStopTimeMinutes) {
         overallTimeStatus = "completed";
         rowClass = "table-secondary text-muted";
       } else if (currentTimeMinutes >= departureTimeMinutes - 5) {
@@ -366,7 +366,7 @@ function selectTimePeriod(period) {
     }
 
     if (isLastTrip && overallTimeStatus !== "completed") {
-      rowClass += "-none table-secondary last-bus";
+      rowClass += " last-bus";
     }
 
     if (period === "evening") {
@@ -464,7 +464,7 @@ function showNoServiceMessage() {
       <div class="mb-4">
         <i class="bi bi-moon-stars fs-1 text-secondary"></i>
       </div>
-      <h3 class="h4 mb-3">The Shuttle Isn't Running Right Now</h3>
+      <h3 class="h4 mb-3">The Shuttle Isn't Running <br>Right Now</h3>
       <p class="text-secondary">Check out the schedule below for our regular service times.</p>
       <div class="mt-4">
         <p><strong>Shuttle Hours:</strong></p>
@@ -561,7 +561,7 @@ function manageAutoRefresh(currentPeriod) {
         autoRefreshInterval = null;
         showNoServiceMessage();
       }
-    }, 60000); // Refresh every 60 seconds (1 minute)
+    }, 10000); // Refresh every 60 seconds (1 minute)
   } else {
     console.log("No auto-refresh - outside service hours");
   }
