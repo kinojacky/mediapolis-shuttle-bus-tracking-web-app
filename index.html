@@ -313,73 +313,15 @@
         console.error('Message or look-where element not found');
       }
     }
-
-    // function updateServiceStatus() {
-    //   const now = new Date();
-    //   const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
-    //   const currentTime = now.toLocaleTimeString('en-US', {
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //     hour12: false
-    //   });
-
-    //   if (serviceConfig.manualOverride.enabled) {
-    //     setStatus(serviceConfig.manualOverride.status);
-    //     return;
-    //   }
-
-    //   const isOperatingDay = serviceConfig.operatingHours[0].days.includes(currentDay);
-    //   if (!isOperatingDay) {
-    //     setStatus("OFF_SERVICE");
-    //     return;
-    //   }
-
-    //   const isServiceTime = serviceConfig.operatingHours[0].periods.some(period => {
-    //     return currentTime >= period.start && currentTime <= period.end;
-    //   });
-
-    //   setStatus(isServiceTime ? "ON_SERVICE" : "OFF_SERVICE");
-    // }
-
-    // function setStatus(status) {
-    //   const statusIndicator = document.querySelector('.status-indicator');
-    //   const statusText = document.querySelector('.status-indicator + span');
-
-    //   if (statusIndicator && statusText) {
-    //     statusIndicator.className = 'status-indicator';
-    //     switch (status) {
-    //       case "ON_SERVICE":
-    //         statusIndicator.classList.add('status-on');
-    //         statusText.textContent = "ON SERVICE";
-    //         break;
-    //       case "OFF_SERVICE":
-    //         statusIndicator.classList.add('status-off');
-    //         statusText.textContent = "OFF SERVICE";
-    //         break;
-    //       case "SERVICE_UNKNOWN":
-    //         statusIndicator.classList.add('status-unknown');
-    //         statusText.textContent = "SERVICE UNKNOWN";
-    //         break;
-    //     }
-    //   } else {
-    //     console.error('Status elements not found');
-    //   }
-    // }
-
-    // Initialize
-    // updateServiceStatus();
     updateGreeting();
 
     // 更新間隔改為每秒
-    // setInterval(updateServiceStatus, 60000); // 1分鐘
     setInterval(updateGreeting, 60000); // 1分鐘
-    // setInterval(() => routeHandler.updateInterface(), 5000); // 5秒
 
     // For testing manual override
     window.toggleManualOverride = function (enabled, status) {
       serviceConfig.manualOverride.enabled = enabled;
       if (status) serviceConfig.manualOverride.status = status;
-      // updateServiceStatus();
     }
 
     console.log(`
@@ -390,9 +332,6 @@
   ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
   `);
   </script>
-
-  <!-- Time Simulator -->
-  <!-- <script src="js/timeSimulator.js"></script> -->
 </body>
 
 </html>
