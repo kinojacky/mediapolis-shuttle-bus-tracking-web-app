@@ -83,6 +83,10 @@ header {
   border-bottom-right-radius: 2rem;
 }
 
+#timeSelector {
+  display: none;
+}
+
 .title-panel {
   display: inline-flex;
   justify-content: center;
@@ -315,9 +319,8 @@ tr.table-secondary td {
 }
 
 .route-info {
-  background-color: var(--secondary-color);
+  /* background-color: var(--secondary-color); */
   border-radius: 8px;
-  padding: 15px;
   margin-bottom: 15px;
 }
 
@@ -353,10 +356,6 @@ tr.table-secondary td {
 @media (max-width: 768px) {
   .timetable {
     font-size: 0.85rem;
-  }
-
-  .route-info {
-    padding: 10px;
   }
 
   .time-selector .btn {

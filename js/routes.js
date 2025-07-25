@@ -16,7 +16,7 @@ const routeConfig = {
       { id: 7, times: ["09:30", "09:35", "09:40"] },
       { id: 8, times: ["09:50", "09:55", "10:00"] },
     ],
-    lastBus: "09:55",
+    lastBus: "09:50",
     description: "Buona Vista MRT → one-north MRT → Campus",
   },
   lunchMWF: {
@@ -32,7 +32,7 @@ const routeConfig = {
       { id: 4, times: ["13:00", "13:10", "13:15"] },
       { id: 5, times: ["13:30", "13:40", "13:45"] },
     ],
-    lastBus: "13:45",
+    lastBus: "13:30",
     description: "Campus → Holland Drive Food Centre → Ghim Moh Food Centre",
   },
   lunchTT: {
@@ -51,7 +51,7 @@ const routeConfig = {
       { id: 7, times: ["13:30", "13:35", "13:40"] },
       { id: 8, times: ["13:50", "13:55", "14:00"] },
     ],
-    lastBus: "14:00",
+    lastBus: "13:50",
     description: "Campus → one-north MRT → The Star Vista",
   },
   evening: {
@@ -98,8 +98,10 @@ function initApp() {
   selectTimePeriod(currentPeriod);
 
   // Update current time info every minute
+  setInterval(getCurrentTimePeriod, 60000);
   setInterval(updateCurrentDate, 60000);
 }
+
 // Function to update the current date and time display
 function updateCurrentDate() {
   const now = new Date();
@@ -187,6 +189,8 @@ function renderTimeButtons() {
 
   Object.keys(routeConfig).forEach((period) => {
     const timeData = routeConfig[period];
+    if (!timeData || typeof timeData !== "object") return;
+    
     const button = document.createElement("button");
     button.className = "btn rounded-pill btn-outline-primary";
     button.setAttribute("data-period", period);
@@ -227,6 +231,13 @@ function renderTimeButtons() {
 
 // Function to select and display a time period
 function selectTimePeriod(period) {
+  // Handle invalid or undefined period
+  if (!routeConfig.hasOwnProperty(period)) {
+    console.warn(`Time period "${period}" not found in routeConfig.`);
+    showNoServiceMessage();
+    return;
+  }
+  
   // Handle no service period
   if (period === "none") {
     showNoServiceMessage();
@@ -235,15 +246,6 @@ function selectTimePeriod(period) {
 
   const timeData = routeConfig[period];
   const container = document.getElementById("timetableContainer");
-
-  // Update active button
-  document.querySelectorAll(".time-selector .btn").forEach((btn) => {
-    if (btn.getAttribute("data-period") === period) {
-      btn.classList.add("active");
-    } else {
-      btn.classList.remove("active");
-    }
-  });
 
   // Get current time to highlight relevant bus schedules
   const now = new Date();
@@ -263,17 +265,6 @@ function selectTimePeriod(period) {
       }</p>
     </div>
   `;
-      // <p class="mb-0"><strong>Operating Days:</strong> 
-      //   <span class="operation-days">
-      //     ${
-      //       period.includes("lunch")
-      //         ? period === "lunchMWF"
-      //           ? "Mon / Wed / Fri"
-      //           : "Tue / Thu"
-      //         : "Mon to Fri"
-      //     }
-      //   </span>
-      // </p>
 
   // Display bus count if more than one
   if (timeData.buses > 1) {
@@ -312,6 +303,34 @@ function selectTimePeriod(period) {
       ? dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5 // Mon, Wed, Fri
       : dayOfWeek === 2 || dayOfWeek === 4; // Tue, Thu
 
+  // Helper function to get bus status for each stop
+  function getBusStatusAtStop(trip, stopIndex, currentTimeMinutes) {
+    const stopTime = trip.times[stopIndex];
+    const [stopHour, stopMinute] = stopTime.split(":").map(Number);
+    const stopTimeMinutes = stopHour * 60 + stopMinute;
+    
+    // Calculate time difference in minutes
+    const timeDiff = stopTimeMinutes - currentTimeMinutes;
+    
+    if (stopIndex === 0) {
+      // First stop (departure)
+      if (timeDiff <= 2 && timeDiff > 0) {
+        return { status: 'departing-soon', badge: 'Departing Soon', badgeClass: 'bg-warning' };
+      } else if (timeDiff <= 0 && timeDiff > -5) {
+        return { status: 'departing', badge: 'Departing', badgeClass: 'bg-primary' };
+      }
+    } else {
+      // Intermediate/final stops
+      if (timeDiff <= 4 && timeDiff > 2) {
+        return { status: 'arriving-soon', badge: 'Arriving Soon', badgeClass: 'bg-info' };
+      } else if (timeDiff <= 3 && timeDiff > 0) {
+        return { status: 'at-station', badge: 'At Station', badgeClass: 'bg-success' };
+      }
+    }
+    
+    return { status: 'normal', badge: '', badgeClass: '' };
+  }
+
   // Add schedule rows
   timeData.schedule.forEach((trip) => {
     const isLastTrip =
@@ -324,50 +343,64 @@ function selectTimePeriod(period) {
       .map(Number);
     const departureTimeMinutes = departureHour * 60 + departureMinute;
 
-    // Calculate time status (only apply to today's applicable schedule)
-    let timeStatus = "";
+    // Calculate overall trip status
+    let overallTimeStatus = "";
+    let rowClass = "";
+    
     if (isApplicableToday && period === getCurrentTimePeriod()) {
-      if (departureTimeMinutes < currentTimeMinutes) {
-        timeStatus = "past"; // Already departed
-      } else if (departureTimeMinutes <= currentTimeMinutes + 5) {
-        timeStatus = "current"; // Departing soon or now
+      // Check if entire trip is completed (15 minutes after last stop)
+      const lastStopTime = trip.times[trip.times.length - 1];
+      const [lastHour, lastMinute] = lastStopTime.split(":").map(Number);
+      const lastStopTimeMinutes = lastHour * 60 + lastMinute;
+      
+      if (currentTimeMinutes > lastStopTimeMinutes + 15) {
+        overallTimeStatus = "completed";
+        rowClass = "table-secondary text-muted";
+      } else if (currentTimeMinutes >= departureTimeMinutes - 5) {
+        overallTimeStatus = "active";
+        rowClass = "table-light";
       } else {
-        timeStatus = "upcoming"; // Future departure
+        overallTimeStatus = "upcoming";
+        rowClass = "";
       }
     }
 
-    // Class for row styling based on time status
-    let rowClass = "";
-    if (timeStatus === "past") {
-      rowClass = "table-secondary text-muted";
-    } else if (timeStatus === "current") {
-      rowClass = "table-success fw-bold";
-    } else if (isLastTrip) {
-      rowClass = "last-bus";
+    if (isLastTrip && overallTimeStatus !== "completed") {
+      rowClass += "-none table-secondary last-bus";
     }
 
     if (period === "evening") {
       html += `<tr class="${rowClass}">`;
       html += `<td>${trip.id}</td>`;
       html += `<td>Bus ${trip.bus}</td>`;
+      
       trip.times.forEach((time, idx) => {
-        // Add badge for departing soon
-        const timeDisplay =
-          timeStatus === "current" && idx === 0
-            ? `${time} <span class="badge bg-danger">即將發車</span>`
-            : time;
+        let timeDisplay = time;
+        
+        if (isApplicableToday && period === getCurrentTimePeriod() && overallTimeStatus !== "completed") {
+          const busStatus = getBusStatusAtStop(trip, idx, currentTimeMinutes);
+          if (busStatus.badge) {
+            timeDisplay = `${time} <span class="badge ${busStatus.badgeClass}">${busStatus.badge}</span>`;
+          }
+        }
+        
         html += `<td>${timeDisplay}</td>`;
       });
       html += `</tr>`;
     } else {
       html += `<tr class="${rowClass}">`;
       html += `<td>${trip.id}</td>`;
+      
       trip.times.forEach((time, idx) => {
-        // Add badge for departing soon
-        const timeDisplay =
-          timeStatus === "current" && idx === 0
-            ? `${time} <span class="badge bg-danger">即將發車</span>`
-            : time;
+        let timeDisplay = time;
+        
+        if (isApplicableToday && period === getCurrentTimePeriod() && overallTimeStatus !== "completed") {
+          const busStatus = getBusStatusAtStop(trip, idx, currentTimeMinutes);
+          if (busStatus.badge) {
+            timeDisplay = `${time} <span class="badge ${busStatus.badgeClass}">${busStatus.badge}</span>`;
+          }
+        }
+        
         html += `<td>${timeDisplay}</td>`;
       });
       html += `</tr>`;
@@ -417,6 +450,9 @@ function selectTimePeriod(period) {
   html += `</div>`;
 
   container.innerHTML = html;
+  
+  // Manage auto-refresh when period is manually selected
+  manageAutoRefresh(period);
 }
 
 // Function to show a message when no service is available
@@ -440,7 +476,115 @@ function showNoServiceMessage() {
       </div>
     </div>
   `;
+
+  // Stop auto-refresh when showing no service message
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+    console.log("Auto-refresh stopped - no service period");
+  }
 }
+
+// Auto-refresh management
+let autoRefreshInterval = null;
+
+// Helper function to get current time period
+function getCurrentTimePeriod() {
+  const now = new Date();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  const currentTime = currentHour * 60 + currentMinute;
+  
+  // Morning: 7:30 AM - 10:00 AM
+  if (currentTime >= 450 && currentTime <= 600) {
+    return "morning";
+  }
+  // Lunch: 11:30 AM - 2:00 PM
+  else if (currentTime >= 690 && currentTime <= 840) {
+    const dayOfWeek = now.getDay();
+    if (dayOfWeek === 1 || dayOfWeek === 3 || dayOfWeek === 5) {
+      return "lunchMWF";
+    } else if (dayOfWeek === 2 || dayOfWeek === 4) {
+      return "lunchTT";
+    }
+  }
+  // Evening: 5:00 PM - 7:30 PM
+  else if (currentTime >= 1020 && currentTime <= 1170) {
+    return "evening";
+  }
+  
+  return "none";
+}
+
+// Check if current time is during service hours on weekdays
+function isServiceTime() {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  
+  // Check if it's weekday (Monday = 1, Friday = 5)
+  if (dayOfWeek < 1 || dayOfWeek > 5) {
+    return false;
+  }
+  
+  return getCurrentTimePeriod() !== "none";
+}
+
+// Start auto-refresh if in service time
+function manageAutoRefresh(currentPeriod) {
+  // Clear existing interval
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+  }
+  
+  // Only start auto-refresh during service hours on weekdays
+  if (isServiceTime() && currentPeriod !== "none") {
+    console.log("Starting auto-refresh - service time detected");
+    autoRefreshInterval = setInterval(() => {
+      // Check if still in service time
+      if (isServiceTime()) {
+        console.log("Auto-refreshing page at", new Date().toLocaleTimeString());
+        // Re-render the current time period
+        const newPeriod = getCurrentTimePeriod();
+        if (newPeriod !== "none") {
+          selectTimePeriod(newPeriod);
+        } else {
+          // Service ended, stop auto-refresh and show no service message
+          clearInterval(autoRefreshInterval);
+          autoRefreshInterval = null;
+          showNoServiceMessage();
+        }
+      } else {
+        // No longer service time, stop auto-refresh
+        console.log("Stopping auto-refresh - service time ended");
+        clearInterval(autoRefreshInterval);
+        autoRefreshInterval = null;
+        showNoServiceMessage();
+      }
+    }, 60000); // Refresh every 60 seconds (1 minute)
+  } else {
+    console.log("No auto-refresh - outside service hours");
+  }
+}
+
+// Initialize auto-refresh on page load
+function initializeAutoRefresh() {
+  const currentPeriod = getCurrentTimePeriod();
+  
+  // Display current period
+  if (currentPeriod !== "none") {
+    selectTimePeriod(currentPeriod);
+  } else {
+    showNoServiceMessage();
+  }
+  
+  // Start auto-refresh management
+  manageAutoRefresh(currentPeriod);
+}
+
+// Call this function when the page loads
+// You can add this to your existing initialization code
+// initializeAutoRefresh();
 
 // Initialize the app when the document is loaded
 document.addEventListener("DOMContentLoaded", initApp);
