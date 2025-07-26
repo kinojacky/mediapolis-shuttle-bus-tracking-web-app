@@ -106,19 +106,20 @@ header {
   margin-right: 0.5rem;
 }
 
+.status-wrapper {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  background-color: #F4F0EC;
+  margin: 0 auto 1rem;
+  box-shadow: 0 0.6rem 0 0 #ACACAC;
+}
+
 .status-panel {
-  width: 100%;
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  padding: 1rem 1.8rem;
-  border-radius: 1.2rem;
-  font-size: 1.4rem;
-  background-color: #F4F0EC;
-  margin: 0 auto;
-  box-shadow: 0 0.6rem 0 0 #ACACAC;
-  z-index: 2;
 }
 
 .status-indicator {

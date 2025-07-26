@@ -125,15 +125,15 @@ function updateCurrentDate() {
 
   // Update current time period info
   const currentPeriod = getCurrentTimePeriod();
+  const currentIndicator = document.getElementById("statusIndicator");
   const currentTimeRoute = document.getElementById("currentTimeRoute");
 
-  if (currentPeriod === "none") {
-    currentTimeRoute.textContent = "Off Service";
-    currentTimeRoute.className = "badge bg-danger";
+  if (currentPeriod === "none" || currentPeriod !== "none") {
+    currentTimeRoute.innerHTML = `OFF SERVICE`;
+    currentIndicator.className = "status-indicator status-off"
   } else {
-    currentTimeRoute.innerHTML = `On Service`;
-    // currentTimeRoute.innerHTML = `Current Bus Runs:<br> ${routeConfig[currentPeriod].name}`;
-    currentTimeRoute.className = "badge bg-success";
+    currentTimeRoute.innerHTML = `ON SERVICE`;
+    currentIndicator.className = "status-indicator status-on"
   }
 }
 
