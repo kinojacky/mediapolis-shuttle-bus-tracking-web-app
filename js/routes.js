@@ -98,8 +98,8 @@ function initApp() {
   selectTimePeriod(currentPeriod);
 
   // Update current time info every minute
-  // setInterval(getCurrentTimePeriod, 60000);
   setInterval(updateCurrentDate, 60000);
+  initializeAutoRefresh();
 }
 
 // Function to update the current date and time display
@@ -147,7 +147,6 @@ function updateCurrentTime() {
   const formatted = `${hours}:${minutes}:${seconds}`;
   document.getElementById('currentTime').innerHTML = formatted;
 }
-
 
 // Function to determine current time period based on day and time
 function getCurrentTimePeriod() {
@@ -294,6 +293,12 @@ function selectTimePeriod(period) {
 
   // Get today's day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
   const dayOfWeek = now.getDay();
+
+  // Weekend - No service
+  if (dayOfWeek === 0 || dayOfWeek === 6) {
+    showNoServiceMessage();
+    return;
+  }
 
   // Check if today's schedule is applicable for the selected period
   const isApplicableToday =
@@ -581,10 +586,6 @@ function initializeAutoRefresh() {
   // Start auto-refresh management
   manageAutoRefresh(currentPeriod);
 }
-
-// Call this function when the page loads
-// You can add this to your existing initialization code
-// initializeAutoRefresh();
 
 // Initialize the app when the document is loaded
 document.addEventListener("DOMContentLoaded", initApp);
