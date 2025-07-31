@@ -112,7 +112,7 @@ header {
   border-radius: 1rem;
   font-size: 1rem;
   background-color: #F4F0EC;
-  margin: 0 auto 1rem;
+  margin: 0 0 1rem;
   box-shadow: 0 0.6rem 0 0 #ACACAC;
 }
 
@@ -280,9 +280,9 @@ header {
   color: #E95C50;
 }
 
-.current-date-container {
+/* .current-date-container {
   border-left: 4px solid var(--primary-color);
-}
+} */
 
 .table-success {
   background-color: rgba(25, 135, 84, 0.2) !important;

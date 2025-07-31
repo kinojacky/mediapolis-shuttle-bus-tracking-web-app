@@ -54,23 +54,23 @@
   <header>
     <div class="container py-4">
       <div class="row">
-        <div class="col-12 text-center">
+        <div class="col-12">
           
           <!-- Current Date Display -->
-          <div class="current-date-container mb-2 p-2 bg-light rounded">
+          <div class="current-date-container mb-2 p-2">
             <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <span class="fw-bold" id="currentDate">Loading Date and Time...</span>
-                (<span class="text-secondary" id="currentDayOfWeek"></span>)
+              <div class="status-wrapper">
+                <div class="status-panel">
+                  <div id="statusIndicator" class="status-indicator"></div>
+                  <span class="" id="currentTimeRoute">-</span>
+                </div>
               </div>
-              <span id="currentTime" class="text-secondary current-date-time"></span>
-            </div>
-          </div>
-          
-          <div class="status-wrapper">
-            <div class="status-panel">
-              <div id="statusIndicator" class="status-indicator"></div>
-              <span class="" id="currentTimeRoute">-</span>
+              <div class="text-end">
+                <span class="fw-bold" id="currentDate">Loading Date and Time...</span>
+                (<span class="fw-bold text-secondary" id="currentDayOfWeek"></span>)
+                <br>
+                <span id="currentTime" class="text-secondary current-date-time"></span>
+              </div>
             </div>
           </div>
 
@@ -212,6 +212,7 @@
         MORNING: "Good Morning, Mate!",
         LUNCH: "Good Afternoon, Eater!",
         EVENING: "Good Evening, Off-Duty Hero!",
+        BREAK: "Our Driver Need a Break Time!",
         WEEKEND: "Sorry! Off Service today!"
       },
       dailyMessages: {
@@ -274,13 +275,16 @@
       const now = new Date();
       const hour = now.getHours();
       const currentDay = now.toLocaleDateString('en-US', { weekday: 'long' });
+      const currentPeriod = getCurrentTimePeriod();
 
       let periodGreeting;
       if (currentDay === "Saturday" || currentDay === "Sunday") {
         periodGreeting = greetingsConfig.greetings.WEEKEND;
-      } else if (hour >= 5 && hour < 12) {
+      } else if (currentPeriod === "none") {
+        periodGreeting = greetingsConfig.greetings.BREAK;
+      } else if (currentPeriod === "morning") {
         periodGreeting = greetingsConfig.greetings.MORNING;
-      } else if (hour >= 12 && hour < 17) {
+      } else if (currentPeriod === "lunchMWF" || currentPeriod === "lunchTT") {
         periodGreeting = greetingsConfig.greetings.LUNCH;
       } else {
         periodGreeting = greetingsConfig.greetings.EVENING;
@@ -300,7 +304,7 @@
       }
 
       if (messageElement && lookWhereElement) {
-        if (currentDay === "Saturday" || currentDay === "Sunday") {
+        if (currentDay === "Saturday" || currentDay === "Sunday" || currentPeriod === "none") {
           messageElement.style.display = 'none';
           lookWhereElement.style.display = 'none';
         } else {
