@@ -467,7 +467,7 @@ function showNoServiceMessage() {
   const container = document.getElementById("timetableContainer");
 
   container.innerHTML = `
-    <div class="text-center py-5">
+    <div class="text-center py-3">
       <div class="mb-4">
         <i class="bi bi-moon-stars fs-1 text-secondary"></i>
       </div>
