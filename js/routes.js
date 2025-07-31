@@ -128,13 +128,15 @@ function updateCurrentDate() {
   const currentIndicator = document.getElementById("statusIndicator");
   const currentTimeRoute = document.getElementById("currentTimeRoute");
 
-  if (currentPeriod === "none" || currentPeriod !== "none") {
+  if (currentPeriod === "none") {
     currentTimeRoute.innerHTML = `OFF SERVICE`;
     currentIndicator.className = "status-indicator status-off"
   } else {
     currentTimeRoute.innerHTML = `ON SERVICE`;
     currentIndicator.className = "status-indicator status-on"
   }
+
+  console.log(currentPeriod);
 }
 
 function updateCurrentTime() {
@@ -273,22 +275,21 @@ function selectTimePeriod(period) {
 
   // Generate timetable
   html += `
-    <div class="mb-4">
-      <div class="table-responsive">
-        <table class="table table-bordered timetable">
-          <thead>
-            <tr>
-              ${
-                period === "evening"
-                  ? "<th>No.</th><th>Buses</th>"
-                  : "<th>No.</th>"
-              }
-              ${timeData.stops
-                .map((stop) => `<th>${stop}</th>`)
-                .join("")}
-            </tr>
-          </thead>
-        <tbody>
+    <div class="table-responsive">
+      <table class="table table-bordered timetable">
+        <thead>
+          <tr>
+            ${
+              period === "evening"
+                ? "<th>No.</th><th>Buses</th>"
+                : "<th>No.</th>"
+            }
+            ${timeData.stops
+              .map((stop) => `<th>${stop}</th>`)
+              .join("")}
+          </tr>
+        </thead>
+      <tbody>
   `;
 
   // Get today's day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
@@ -332,6 +333,8 @@ function selectTimePeriod(period) {
         return { status: 'at-station', badge: 'At Station', badgeClass: 'bg-success' };
       }
     }
+
+    console.log(timeDiff)
     
     return { status: 'normal', badge: '', badgeClass: '' };
   }
@@ -413,9 +416,8 @@ function selectTimePeriod(period) {
   });
 
   html += `
-        </tbody>
-      </table>
-    </div>
+      </tbody>
+    </table>
   `;
 
   // Add last bus info
