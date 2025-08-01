@@ -276,7 +276,7 @@ function selectTimePeriod(period) {
   // Generate timetable
   html += `
     <div class="table-responsive">
-      <table class="table table-sm table-bordered timetable">
+      <table class="table table-sm table-bordered text-center timetable">
         <thead>
           <tr>
             ${
