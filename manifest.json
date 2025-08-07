@@ -3,8 +3,8 @@
   "short_name": "Shuttle Bus",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
+  "background_color": "#2F314D",
+  "theme_color": "#2F314D",
   "icons": [
     {
       "src": "icons/icon-192x192.png",
