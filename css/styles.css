@@ -170,7 +170,23 @@ header {
 .status-on {
   background-color: #92BA79;
   border: 2px solid #729B58;
+  animation: blink 2s infinite;
 }
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 
 .status-off {
   background-color: #E95C50;
