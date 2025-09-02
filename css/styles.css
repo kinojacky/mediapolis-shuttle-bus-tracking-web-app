@@ -70,6 +70,8 @@ button.navbar-toggler i.bi {
 .navbar {
   background-color: #2F314D;
   color: #FAFAFA;
+  /* iPhone / Safari 的安全區域 */
+  padding-top: calc(20px + env(safe-area-inset-top));
 }
 
 .navbar-brand {
@@ -438,6 +440,8 @@ tr.table-secondary td {
   background-size: 100%;
   background-repeat: no-repeat;
   background-position: bottom;
+  /* iPhone / Safari 的安全區域 */
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
 }
 
 .img-bee {
