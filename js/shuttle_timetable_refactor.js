@@ -172,38 +172,25 @@ function parseHHMM(hhmm) {
 }
 
 function minutesNow(date = new Date()) {
-  const d = TZ
-    ? new Date(
-        new Intl.DateTimeFormat("en-GB", {
-          timeZone: TZ,
-          hour12: false,
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-        }).format(date)
-      )
-    : date;
+  const d = TZ ? new Date(date.toLocaleString("en-US", { timeZone: TZ })) : date;
   return d.getHours() * 60 + d.getMinutes();
 }
 
 function weekdayName(date = new Date()) {
   return new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: TZ || undefined }).format(date);
 }
-
-function isWeekend(date = new Date()) {
-  const jsDay = getJsDay(date); // 0=Sun..6=Sat
-  return jsDay === 0 || jsDay === 6;
-}
-
 function getJsDay(date = new Date()) {
-  return new Date(date.toLocaleString("en-US", { timeZone: TZ || undefined })).getDay(); // 0..6
+  const d = TZ ? new Date(date.toLocaleString("en-US", { timeZone: TZ })) : date;
+  return d.getDay(); // 0=Sun..6=Sat
+}
+function isWeekend(date = new Date()) {
+  const day = getJsDay(date); // 0=Sun..6=Sat
+  return day === 0 || day === 6;
 }
 
-// Determine the current active block id, or "none"
 function getCurrentBlockId(now = new Date()) {
+  // Hard-stop on weekends regardless of any time windows
+  if (isWeekend(now)) return "none";
   const day = getJsDay(now); // 0=Sun..6=Sat
   const mins = minutesNow(now);
   for (const b of SERVICE_BLOCKS) {
@@ -251,8 +238,9 @@ function updateDateTimeUI() {
   if ($dow) $dow.textContent = dowShort;
   if ($time) $time.textContent = timeText;
 
-  // Service ON/OFF indicator
-  const blockId = getCurrentBlockId(now);
+  // Service ON/OFF indicator (force OFF on weekends)
+  const isWknd = isWeekend(now);
+  const blockId = isWknd ? "none" : getCurrentBlockId(now);
   const $indicator = qs("#statusIndicator");
   const $route = qs("#currentTimeRoute");
   if ($indicator && $route) {
@@ -269,10 +257,10 @@ function updateDateTimeUI() {
 function pickGreeting(now = new Date()) {
   if (isWeekend(now)) return GREETINGS.WEEKEND;
   const blockId = getCurrentBlockId(now);
-  if (blockId === "none") return GREETINGS.BREAK; // off between blocks on weekdays
+  if (blockId === "none") return GREETINGS.BREAK;
   if (blockId === "morning") return GREETINGS.MORNING;
   if (blockId.startsWith("lunch")) return GREETINGS.LUNCH;
-  if (blockId === "evening") return GREETINGS.EVENING; // even after 18:00 but before 19:30
+  if (blockId === "evening") return GREETINGS.EVENING;
   return GREETINGS.GOODNIGHT;
 }
 
@@ -282,23 +270,17 @@ function updateGreetingUI() {
   const dayName = weekdayName(now);
   const messages = DAILY_MESSAGES[dayName] || [];
   const randomMsg = messages.length ? messages[Math.floor(Math.random() * messages.length)] : "";
-
-  const $greet = qs(".greeting");
-  const $msg = qs(".message");
-  const $look = qs(".look-where");
-
-  if ($greet) $greet.textContent = greeting;
-
+  if (qs(".greeting")) qs(".greeting").textContent = greeting;
   const blockId = getCurrentBlockId(now);
-  const isOff = isWeekend(now) || blockId === "none";
-  if ($msg && $look) {
-    if (isOff) {
-      $msg.style.display = "none";
-      $look.style.display = "none";
+  const off = isWeekend(now) || blockId === "none";
+  if (qs(".message") && qs(".look-where")) {
+    if (off) {
+      qs(".message").style.display = "none";
+      qs(".look-where").style.display = "none";
     } else {
-      $msg.style.display = "block";
-      $look.style.display = "block";
-      $msg.textContent = randomMsg;
+      qs(".message").style.display = "block";
+      qs(".look-where").style.display = "block";
+      qs(".message").textContent = randomMsg;
     }
   }
 }
