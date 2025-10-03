@@ -437,7 +437,13 @@ function showNoServiceMessage() {
         <p><strong>Shuttle Hours:</strong></p>
         <ul class="list-unstyled">
           <li class="mb-2">Morning: 7:30 AM - 10:00 AM (Mon-Fri)</li>
-          <li class="mb-2">Lunch Time: 11:30 AM - 2:00 PM (Mon-Fri)</li>
+          <li class="mb-2">
+            Lunch Time: 11:30 AM - 2:00 PM (Mon-Fri)
+            <br>
+            (Mon/Wed/Fri) Holland Drive FC → Ghim Moh FC
+            <br>
+            (Tue/Thu) one-north MRT → The Star Vista
+          </li>
           <li class="mb-2">Evening: 5:00 PM - 7:30 PM (Mon-Fri)</li>
         </ul>
       </div>
